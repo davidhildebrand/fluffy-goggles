@@ -25,21 +25,21 @@ global stm sys
 
 %% Specify Session Parameters
 stm.Vis.SesTime =  datestr(now, 30);
-% locate the screen number
-for i = 1: max(Screen('Screens'))
-    info = Screen('Resolution', i);
-    if info.height ==1080
-        sys.screenNumber = i;
-        break
-    end
-end
+% % locate the screen number
+% for i = 1: max(Screen('Screens'))
+%     info = Screen('Resolution', i);
+%     if info.height ==1080
+%         sys.screenNumber = i;
+%         break
+%     end
+% end
 
 % 
-% sys.screenNumber = max(Screen('Screens'));
+ sys.screenNumber = max(Screen('Screens'));
 
 
 stm.SR =                100e3;
-stm.SesDurTotal =       320;                                        
+stm.SesDurTotal =       8*20.0; % CycleNum * CycleTime                                       
 % stm.Vis.PicSource = '\Wang\phase_stimuli';
 % stm.Vis.PicSource = '\Hung\phase_stimuli';
 % stm.Vis.PicSource = '\P002\equalized';
@@ -49,7 +49,7 @@ stm.SesDurTotal =       320;
 stm.Vis.PicSource = '\Last\shifthalf';
 
 % stm.Vis.PicBackground = 'white';
-stm.Vis.PicBackground =     'pink';
+stm.Vis.PicBackground =     'gray';
 stm.Vis.PicDur =            0.5;
 stm.Vis.PicNumStim =        20;
 stm.Vis.SesOptionContrast = 'FBAVOUPS';
@@ -94,60 +94,72 @@ stm.Vis.CtrlTrlDurCurrentTimer=	tic;
 stm.Vis.PicNumPreStim =         round(stm.Vis.TrlDurPreStim/    stm.Vis.PicDur);
 stm.Vis.PicNumPostStim =        round(stm.Vis.TrlDurPostStim/   stm.Vis.PicDur);
 
-% Display Device
-stm.Vis.MonitorName =       'LG 32GK850F-B';
-stm.Vis.MonitorDistance =   75;             % in cm
-stm.Vis.MonitorHeight =     0.032*1080;	% in cm
-stm.Vis.MonitorWidth =      0.032*1920;	% in cm
+
 
 %% Prepare the Psychtoolbox window
 % Here we call some default settings for setting up Psychtoolbox
                                                 PsychDefaultSetup(2);
 % Define shades
+white = WhiteIndex(sys.screenNumber);
+black = BlackIndex(sys.screenNumber);   
 gray =  GrayIndex(sys.screenNumber, 0.5);   
                                                 Screen('Preference', 'VisualDebugLevel', 1);
                                                 Screen('Preference', 'SkipSyncTests', 1);
 % Open an on screen window
 switch stm.Vis.PicBackground
-    case 'gray';    [stm.Vis.windowPtr, ~] = PsychImaging('OpenWindow', sys.screenNumber, gray);
-    case 'pink';    [stm.Vis.windowPtr, ~] = PsychImaging('OpenWindow', sys.screenNumber, gray);
-        % display a pink noise background
-        stm.Vis.Tex0 =      pinknoiseimage(1080, 1920);
-        stm.Vis.Tex0Ind =   Screen('MakeTexture',   stm.Vis.windowPtr,	stm.Vis.Tex0);
-                            Screen('DrawTextures',  stm.Vis.windowPtr,  stm.Vis.Tex0Ind);
-        vbl =               Screen('Flip',          stm.Vis.windowPtr);
+    case 'white';	[stm.Vis.windowPtr, windowRect] = PsychImaging('OpenWindow', sys.screenNumber, white);
+    case 'black';	[stm.Vis.windowPtr, windowRect] = PsychImaging('OpenWindow', sys.screenNumber, black);
+    case 'gray';    [stm.Vis.windowPtr, windowRect] = PsychImaging('OpenWindow', sys.screenNumber, gray);
 end
-% Query: Get the size of the on screen window
-[stm.Vis.MonitorPixelNumX, stm.Vis.MonitorPixelNumY] = ...
-                                                Screen('WindowSize', stm.Vis.windowPtr);
+
 % Query: the frame duration
 stm.Vis.TrialIFI =                              Screen('GetFlipInterval', stm.Vis.windowPtr);
-if abs(stm.Vis.TrialIFI - 1/59)/(1/59) > 0.05
+if abs(stm.Vis.TrialIFI - 1/59)/(1/59) > 0.05 % 1/144)/(1/144) > 0.05 %SOC. 
     errordlg('screen is not at right refresh rate!');
     return;
 end
-% vbl = Screen('Flip', stm.Vis.windowPtr);
+vbl = Screen('Flip', stm.Vis.windowPtr);
 
-%% Initialize parameters
+%% Compare stimulus size in Wang and Freiwald labs and adjust accordingly
+
+%Wang
+stm.Vis.MonitorDistance =   75;             % in cm
+stm.Vis.MonitorHeight =     0.02724*1440;	% in cm
+stm.Vis.MonitorWidth =      0.02724*2560;	% in cm
+stm.Vis.MonitorPixelNumX = 2560;
+stm.Vis.MonitorPixelNumY = 1440;
+
 stm.Vis.MonitorAngleX =         2*atan(stm.Vis.MonitorWidth/2/stm.Vis.MonitorDistance)/pi*180;  
 stm.Vis.MonitorAngleY =         2*atan(stm.Vis.MonitorHeight/2/stm.Vis.MonitorDistance)/pi*180;
 stm.Vis.MonitorPixelAngleX =    stm.Vis.MonitorAngleX/stm.Vis.MonitorPixelNumX;
 stm.Vis.MonitorPixelAngleY =    stm.Vis.MonitorAngleY/stm.Vis.MonitorPixelNumY;
-stm.Vis.MonitorPixelAngle =     mean([stm.Vis.MonitorPixelAngleX stm.Vis.MonitorPixelAngleY]);
+
+stm.Vis.MonitorPixelAngle_Wang =     mean([stm.Vis.MonitorPixelAngleX stm.Vis.MonitorPixelAngleY]);
+
+%Freiwald
+stm.Vis.MonitorDistance =   20;             % in cm
+stm.Vis.MonitorHeight =     16.5375;	% in cm
+stm.Vis.MonitorWidth =      29.4;	% in cm
+[stm.Vis.MonitorPixelNumX, stm.Vis.MonitorPixelNumY] = ...
+                                                Screen('WindowSize', stm.Vis.windowPtr);
+                                           
+stm.Vis.MonitorAngleX =         2*atan(stm.Vis.MonitorWidth/2/stm.Vis.MonitorDistance)/pi*180;  
+stm.Vis.MonitorAngleY =         2*atan(stm.Vis.MonitorHeight/2/stm.Vis.MonitorDistance)/pi*180;
+stm.Vis.MonitorPixelAngleX =    stm.Vis.MonitorAngleX/stm.Vis.MonitorPixelNumX;
+stm.Vis.MonitorPixelAngleY =    stm.Vis.MonitorAngleY/stm.Vis.MonitorPixelNumY;
+
+stm.Vis.MonitorPixelAngle_Freiwald =     mean([stm.Vis.MonitorPixelAngleX stm.Vis.MonitorPixelAngleY]);
+
+
+%% Initialize parameters
+
+stm.Vis.MonitorPixelAngle =     stm.Vis.MonitorPixelAngle_Freiwald;
 stm.Vis.MonitorCenter =         [stm.Vis.MonitorPixelNumX/2 stm.Vis.MonitorPixelNumY/2];
 
 % texture patch display size
-switch stm.Vis.PicSource
-    case '\Wang\phase_stimuli';         stm.Vis.MonitorTexPatchPos = 240* [1 -1 -1 1];
-    case '\Hung\phase_stimuli';         stm.Vis.MonitorTexPatchPos = [250 -150 -250 150];
-    case '\P002\equalized';             stm.Vis.MonitorTexPatchPos = [300 -180 -300 180];            
-    case '\P002\pink2_fullscreen';      stm.Vis.MonitorTexPatchPos = [1280 -720 -1280 720];      
-    case '\P002\pink_song_pattern';     stm.Vis.MonitorTexPatchPos = [1280 -720 -1280 720];    
-    case '\P002\pink_song_shifthalf';	stm.Vis.MonitorTexPatchPos = [1280 -720 -1280 720];   
-    case '\Last\shifthalf';             stm.Vis.MonitorTexPatchPos = [1280 -720 -1280 720]; 
-    otherwise;                          stm.Vis.MonitorTexPatchPos = 10*[1 -1 -1 1];
-end
-     
+stm.Vis.MonitorTexPatchPos = round([1280 -720 -1280 720] * ...
+    stm.Vis.MonitorPixelAngle_Wang / stm.Vis.MonitorPixelAngle_Freiwald); %SOC.%[1280 -720 -1280 720]; 
+                          
 % read in texture patches
 stm.Vis.TexImDir =	['E:\FreiwaldSync\XINTRINSIC\Stimuli\Visual', stm.Vis.PicSource, '\'];
 for i = 1:stm.Vis.TrlNumTotal
@@ -240,7 +252,10 @@ while stm.Vis.Running
         end
     end
 	pause(0.01);
+   
 end
+
+save(['D:\XINTRINSIC\VisSeqData\' stm.Vis.SesTime '_VisSeqData.mat'], 'stm', '-v7.3');
 
 %% Clean up
 pause(2.0);
@@ -248,7 +263,7 @@ pause(2.0);
         end
 Screen('Close') 
 close all;
-save(['D:\XINTRINSIC\VisSeqData\' stm.Vis.SesTime '_VisSeqData.mat'], 'stm', '-v7.3');
+%save(['D:\XINTRINSIC\VisSeqData\' stm.Vis.SesTime '_VisSeqData.mat'], 'stm', '-v7.3');
 sca;
 % dos('C:\Windows\System32\DisplaySwitch.exe /clone');
 

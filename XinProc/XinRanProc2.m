@@ -1,18 +1,19 @@
 function XinRanProc2(varargin)
 % Xintrinsic preProcessing 1 
 % DATA BINNNING
-
+gaussian_filter = 0;
 clear global
 global T R P
 %% Get preprocessed ('*.rec') file
 [~, T.pcname] = system('hostname');
-if strcmp(T.pcname(1:end-1), 'FANTASIA-425')
-    % if current computer is the recording computer 
-        T.folder = 'D:\=XINTRINSIC=\';    
-else
-    % if current computer is NOT a recording computer
-        T.folder = 'X:\';       
-end
+% if strcmp(T.pcname(1:end-1), 'FANTASIA-425')
+%     % if current computer is the recording computer 
+%         T.folder = 'D:\=XINTRINSIC=\';    
+% else
+%     % if current computer is NOT a recording computer
+%         T.folder = 'X:\';       
+% end
+T.folder = 'D:\XINTRINSIC\';
 
 if nargin ==0
     % Calling from direct running of the function
@@ -43,10 +44,10 @@ disp(['Xintrinsic Processing Stage 1 (spatiotemporal binning) is about to start 
 % R: Recorded
 % P: Processed
 % T: Temporal
-% P.ProcFrameRate =       5;
-P.ProcFrameRate =       20;
+ P.ProcFrameRate =       5;
+% P.ProcFrameRate =       20;
 % P.ProcPixelBinNum =     1;
-P.ProcPixelBinNum =     3;
+P.ProcPixelBinNum =     2;
 
 P.RecCanvasHeight =     300;
 P.RecCanvasWidth =      480;
@@ -63,34 +64,39 @@ for i = 1: length(T.FileName)
     disp([  'Processing: "', T.FileName{i}, ...
             '" with the sound: "', S.SesSoundFile, '"']);
 	% Default Paremeters (for files older than 2020/11/27)
-	switch [S.SysCamMain '_' S.SysCamDeviceName]
-       case 'PointGrey_Grasshopper3 GS3-U3-23S6M'
+% 	switch [S.SysCamMain '_' S.SysCamDeviceName]
+%        case 'PointGrey_Grasshopper3 GS3-U3-23S6M'
             R.SysCamPixelHeight =	300;
             R.SysCamPixelWidth =	480;
             R.SysCamFrameRate =     80;
-       case 'Thorlabs_CS2100M-USB'
-            R.SysCamPixelHeight =	270;
-            R.SysCamPixelWidth =	480;
-            R.SysCamFrameRate =     20;
-       otherwise
-           disp('unrecognizable camera')
-	end
+%        case 'Thorlabs_CS2100M-USB'
+%             R.SysCamPixelHeight =	270;
+%             R.SysCamPixelWidth =	480;
+%             R.SysCamFrameRate =     20;
+%        otherwise
+%            disp('unrecognizable camera')
+% 	end
             R.SysCamBinNumber =     4;
             R.SesTrlNumTotal =      length(S.SesTrlOrderVec);
             R.SysCamFramePerTrial =	S.TrlDurTotal * R.SysCamFrameRate;
     % Other Paremeters (for files after 2020/11/27)
-    if isfield(S, 'SysCamFrameRate')
-            R.SysCamFrameRate =     S.SysCamFrameRate;
-            R.SysCamBinNumber =     S.SysCamBinNumber;
-            R.SysCamPixelHeight =   S.SysCamResolution(1)/S.SysCamBinNumber;
-            R.SysCamPixelWidth =    S.SysCamResolution(2)/S.SysCamBinNumber;
-    end
+%     if isfield(S, 'SysCamFrameRate')
+%             R.SysCamFrameRate =     S.SysCamFrameRate;
+%             R.SysCamBinNumber =     S.SysCamBinNumber;
+%             R.SysCamPixelHeight =   S.SysCamResolution(1)/S.SysCamBinNumber;
+%             R.SysCamPixelWidth =    S.SysCamResolution(2)/S.SysCamBinNumber;
+%     end
     %% Proc Parameters
     %% Poc Parameter initialization for Spatial & Temporal Binning  
     P.ProcCamPixelHeight =	R.SysCamPixelHeight/P.ProcPixelBinNum;
     P.ProcCamPixelWidth =	R.SysCamPixelWidth /P.ProcPixelBinNum;
     P.ProcFrameBinNum = R.SysCamFrameRate/P.ProcFrameRate; 
     
+     S.SesDurTotal = S.SesDurTotal;
+     S.SesFrameTotal = S.SesFrameTotal;
+     S.SesCycleNumTotal = S.SesCycleNumTotal;
+     R.SesTrlNumTotal = R.SesTrlNumTotal;
+     
     P.ProcFramePerTrial =       S.TrlDurTotal * P.ProcFrameRate;   
     P.ProcFrameNumTotal =       S.SesFrameTotal / P.ProcFrameBinNum;
     
@@ -131,6 +137,23 @@ for i = 1: length(T.FileName)
                 R.SysCamPixelHeight * R.SysCamPixelWidth, ...
                 R.SysCamFramePerTrial],...
                 'uint16');
+            
+            %% Gaussian filter
+            if gaussian_filter == 1
+                T.DataRawTemp = reshape(T.DataRaw,...
+                    P.ProcPixelBinNum * P.ProcCamPixelHeight,...
+                    P.ProcPixelBinNum * P.ProcCamPixelWidth,...
+                    P.ProcFrameBinNum * P.ProcFramePerTrial);
+                for f = 1:size(T.DataRawTemp,3)
+                    A = uint16(T.DataRawTemp(:,:,f)); 
+                    T.DataRawTemp(:,:,f) = double(imgaussfilt(A,3));
+                end
+                T.DataRaw = reshape(T.DataRawTemp,...
+                                    R.SysCamPixelHeight * R.SysCamPixelWidth, ...
+                                    R.SysCamFramePerTrial );
+            end
+            
+
             %% Frame #, Trial order # location        
             T.RecFramesCurrent =    ((m-1)*	R.SysCamFramePerTrial +1):...
                                     (m*     R.SysCamFramePerTrial);
@@ -145,21 +168,21 @@ for i = 1: length(T.FileName)
                                                 P.ProcFramePerTrial), 1 );
             P.RawMeanPixel(T.RecFramesCurrent) =    T.PixelMeanRaw;
             P.ProcMeanPixel(T.ProcFramesCurrent) =  T.PixelMeanBinned;  
-            
-            switch [S.SysCamMain '_' S.SysCamDeviceName]
-               case 'PointGrey_Grasshopper3 GS3-U3-23S6M'
+%             switch [S.SysCamMain '_' S.SysCamDeviceName]
+%                case 'PointGrey_Grasshopper3 GS3-U3-23S6M'
+
                     T.ImageS0 =         reshape(T.DataRaw,...  
                         P.ProcPixelBinNum,     P.ProcCamPixelHeight, ...
                         P.ProcPixelBinNum,     P.ProcCamPixelWidth, ...
                         P.ProcFrameBinNum,     P.ProcFramePerTrial);
                     T.ImageS1 =         T.ImageS0;
-                case 'Thorlabs_CS2100M-USB'
-                    T.ImageS0 =         reshape(T.DataRaw,...  
-                        P.ProcPixelBinNum,     P.ProcCamPixelWidth, ...
-                        P.ProcPixelBinNum,     P.ProcCamPixelHeight, ...
-                        P.ProcFrameBinNum,     P.ProcFramePerTrial);
-                    T.ImageS1 =         permute(T.ImageS0, [3 4 1 2 5 6]); 
-            end 
+%                 case 'Thorlabs_CS2100M-USB'
+%                     T.ImageS0 =         reshape(T.DataRaw,...  
+%                         P.ProcPixelBinNum,     P.ProcCamPixelWidth, ...
+%                         P.ProcPixelBinNum,     P.ProcCamPixelHeight, ...
+%                         P.ProcFrameBinNum,     P.ProcFramePerTrial);
+%                     T.ImageS1 =         permute(T.ImageS0, [3 4 1 2 5 6]); 
+%             end 
             T.ImageS2 =         sum(T.ImageS1, 1);  
             T.ImageS3 =         sum(T.ImageS2, 3); 
             T.ImageS4 =         sum(T.ImageS3, 5);

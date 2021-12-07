@@ -1,7 +1,9 @@
 %% MT localizer with multiple options
 
 %% Switch multi-display mode
-if max(Screen('Screens')) ~=2
+
+
+if max(Screen('Screens')) ~=3
     opts = struct(  'WindowStyle',  'modal',... 
                     'Interpreter',  'tex');
     errordlg(...
@@ -22,35 +24,39 @@ pause(2);
 clearvars;              % Clear the workspace
 global stm sys
 
+%% 
+    stm.SesCycleTime =              18;     % in second %SOC.
+    sys.SesCycleNumTotal =          11;     % rep # total
+
 %% Specify Session Parameters
 % locate the screen number
-for i = 1: max(Screen('Screens'))
-    info = Screen('Resolution', i);
-    if info.hz ==144
-        sys.screenNumber = i;
-        break
-    end
-end
+% locate the screen number
+% for i = 1: max(Screen('Screens'))
+%     info = Screen('Resolution', i);
+%     if info.height ==2560
+%         sys.screenNumber = i;
+%         break
+%     end
+% end
+
+sys.screenNumber = max(Screen('Screens'));
 
 % Session Timer 
-% stm.TimerOption =       'simulated';
-stm.TimerOption =       'NI-DAQ';
+% stm.TimerOption =       'simulated'; %SOC.
+ stm.TimerOption =       'NI-DAQ';
 
 % Session Type Options
-stm.SesOption =         'Cali';
-% stm.SesOption =         'DLCL';  % Dot Localizer
+%stm.SesOption =         'Cali';
+ stm.SesOption =         'DLCL';  % Dot Localizer SOC.
 % stm.SesOption =         'DCPS';  % Dot Center vs Periphery, Sinusoidal
 % stm.SesOption =         'DRCWF';  % Dot Rotating Quarter, Clockwise, w/ Face;
 % stm.SesOption =         'DRCCF';  % Dot Rotating Quarter, CounterClockwise';
-% stm.SesOption =         'DRCW';  % Dot Rotating Quarter, Clockwise;
+% stm.SesOption =         'DRCW';  % Dot Rotating Quarter, Clockwise; SOC.
 stm.DotAngleDivide =        10;
 
 if stm.SesOption(1) == 'C'
 	stm.SesCycleTime =              1.5;	% in second
     sys.SesCycleNumTotal =          80;     % rep # total
-else
-    stm.SesCycleTime =              20;     % in second
-    sys.SesCycleNumTotal =          20;     % rep # total
 end
     
 % Session Parameters
@@ -67,10 +73,20 @@ stm.SesCycleTimeInitial =       tic;
 % stm.MonitorDistance =   75;         % in cm
 % stm.MonitorHeight =     29.5;       % in cm
 % stm.MonitorWidth =      52.7;       % in cm
-stm.MonitorName =       'LG 32GK850F-B';
-stm.MonitorDistance =   75;             % in cm
-stm.MonitorHeight =     0.02724*1440;	% in cm
-stm.MonitorWidth =      0.02724*2560;	% in cm
+
+stm.MonitorDistance =   18;             % in cm
+stm.MonitorHeight =     16.5375;	% in cm
+stm.MonitorWidth =      29.4;	% in cm
+
+% stm.MonitorName =       'LG 32GK850F-B';
+% stm.MonitorDistance =   75;             % in cm
+% stm.MonitorHeight =     0.02724*1440;	% in cm
+% stm.MonitorWidth =      0.02724*2560;	% in cm
+
+% stm.MonitorDistance =   75;             % in cm
+% stm.MonitorHeight =     0.032*1080;	% in cm
+% stm.MonitorWidth =      0.032*1920;	% in cm
+
 
 %% Prepare the Psychtoolbox window
 % Here we call some default settings for setting up Psychtoolbox
@@ -120,7 +136,7 @@ switch stm.SesOption(1)
         stm.MonitorPixelAngle =     mean([stm.MonitorPixelAngleX stm.MonitorPixelAngleY]);
         stm.MonitorCenter =         [stm.MonitorPixelNumX/2 stm.MonitorPixelNumY/2];
         stm.DotDiameterInPixel =    stm.DotDiameter/stm.MonitorPixelAngle;
-        if stm.DotDiameterInPixel > stm.DotDiameterInPixelMax
+        if stm.DotDiameterInPixel > stm.DotDiameterInPixelMax 
             errordlg('Dot diameter set too big!')
         end
         stm.DotCenterRadiusMax =    stm.MonitorAngleY/2;
@@ -186,7 +202,7 @@ switch stm.TimerOption
         import dabs.ni.daqmx.*
         sys.NIDAQ.TaskCO = Task('Recording Session Cycle Switcher2');
         sys.NIDAQ.TaskCO.createCOPulseChanTicks(...
-            'Dev3', 1, 'Cycle Counter', '100kHzTimebase', ...
+            'Dev1', 1, 'Cycle Counter', '100kHzTimebase', ...
             sys.NIDAQ.D.CycleSmplLow, sys.NIDAQ.D.CycleSmplHigh,...
             0, 'DAQmx_Val_Low');
         sys.NIDAQ.TaskCO.cfgImplicitTiming(...
@@ -205,7 +221,7 @@ switch stm.TimerOption
         sys.TimerH.ExecutionMode =  'fixedRate';
         sys.MsgBox =                msgbox('Click to terminate the session after current cycle');
         stm.Running =               1;
-        pause;
+        %pause; SOC.
         sys.TimerH.start;   
     otherwise
 end
@@ -216,6 +232,10 @@ while stm.Running
     stm.SesOn =           (   sys.SesCycleNumCurrent>0 && ...
                                     sys.SesCycleNumCurrent<=sys.SesCycleNumTotal);
     stm.SesCycleTimeCurrent =    toc(stm.SesCycleTimeInitial); 
+    
+%     if and(stm.SesCycleTimeCurrent > 25, sys.SesCycleNumCurrent == 0)     %SOC. self trigger after 25 secs
+%         sys.SesCycleNumCurrent = 1
+%     end
     
     % Estimate current dot step parameters   
     if stm.SesOption(1)=='D'
@@ -236,6 +256,7 @@ while stm.Running
                 stm.DotAngleMinCurrent =    stm.DotAngleMinInitial+stm.SesOn*360/stm.SesCycleTime* stm.SesCycleTimeCurrent;
                 stm.DotAngleMaxCurrent =    stm.DotAngleMinCurrent+90;
                 stm.DotVecMovingIdx =       mod(stm.DotVecAngle-stm.DotAngleMinCurrent, 360)<90;
+                %disp(num2str(stm.DotAngleMinCurrent))
             case 'RCC'
                 stm.DotMotionSpeedNorm =    1;
                 stm.DotRadiusMinCurrent =   0;

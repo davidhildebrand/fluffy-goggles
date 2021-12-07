@@ -7,14 +7,16 @@ global A T
 clear A T
 global A T
 %% Get preprocessed ('*_P?.mat') file
-[~, T.pcname] = system('hostname');
-if strcmp(T.pcname(1:end-1), 'FANTASIA-425')
-    % if current computer is the recording computer 
-        T.folder = 'D:\=XINTRINSIC=\';    
-else
-    % if current computer is NOT a recording computer
-        T.folder = 'X:\';       
-end
+% if strcmp(T.pcname(1:end-1), 'FANTASIA-425')
+%     % if current computer is the recording computer 
+%         T.folder = 'D:\=XINTRINSIC=\';    
+% else
+%     % if current computer is NOT a recording computer
+%         T.folder = 'X:\';       
+% end
+T.folder = 'D:\XINTRINSIC\';
+
+
         T.version = version;
         slot = strfind(T.version, 'R20');
         T.version = T.version(slot:slot+5);
@@ -152,7 +154,7 @@ A.FileNameMod =     '';
 % % % % % % Manually switch session temporal arrangement if here.	      
 %         A.N_Ttps =	0;
 %         A.N_Tts =	A.N_Ttt;
-% 	    A.N_Ct =    20;       
+% 	    A.N_Ct =    22;       
 % 	        A.N_Ttt =   A.N_Tst/A.N_Ct;
 % 	        A.N_Tts =   A.N_Ttt - A.N_Ttps;
 %         A.FileNameMod = sprintf('_%drep', A.N_Ct);
@@ -539,9 +541,12 @@ T.H.hFig2AxesSpec = axes(...
 T.H.hFig2AxesSpecLinePixlSelect = ...
     plot(A.Qt_Freqs, A.PtQt_FFTAmp(A.N_PhSelect + A.N_PwSelect*A.N_Ph,:));
     plot(A.Qt_Freqs, A.OneQt_PowerFFTAmp);
+    
+    %T.dAxesSpecDotY = 0.007
 T.H.hFig2AxesSpecDot = plot(T.dAxesSpecDotX, T.dAxesSpecDotY, 'o',...
             'MarkerSize',   5,...
             'Color',        [1 0 0]);
+        
 set(gca,    'XTick',        T.dAxesSpecXTick,... 
             'XLim',         [A.Qt_Freqs(2)  mean(A.Qt_Freqs([2, end]))],...
             'YLim',         [0              T.dAxesSpecDotY],...
@@ -843,6 +848,7 @@ setappdata(T.H.hFig2,   'cVstdNum',     1);
 setappdata(T.H.hFig2,   'cFrmeNum',     1);
 setappdata(T.H.hFig2,   'cPlayingNow',  0); 
 setappdata(T.H.hFig2,	'cQRepNum',     A.N_Qfc);
+setappdata(T.H.hFig2,   'DateTime',     A.FileName{1}(1:13));
 % setappdata(T.H.hFig2,   '', );
 
 % Axes: Tune 
@@ -884,5 +890,5 @@ drawnow;
 % "MATLAB Version 7.3 or later (save -7.3)" to save data > 2GB, even for
 % saving figure through savefig, it applies.
 % A.FileNameMod = [A.FileNameMod sprintf('_%3.1fs', A.PseudoDelay)];
-savefig(T.H.hFig2, [A.PathName,A.FileName{1}(1:end-7), A.FileNameMod, '_Sweep.fig'], 'compact'); 
-T.H.hFig2.Name = [T.H.hFig2.Name 'SAVED'];
+%savefig(T.H.hFig2, [A.PathName,A.FileName{1}(1:end-7), A.FileNameMod, '_Sweep.fig'], 'compact'); 
+%T.H.hFig2.Name = [T.H.hFig2.Name 'SAVED'];

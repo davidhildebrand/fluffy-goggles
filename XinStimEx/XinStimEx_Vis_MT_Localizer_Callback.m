@@ -1,6 +1,7 @@
 function XinStimEx_Vis_MT_Localizer_Callback(~,~)
 global stm sys
 %% Start a Cycle
+
 % This function is called everytime 
 %   stm.TimerOption = 'simulated':  an event happens on the software timer
 %   stm.TimerOption = 'NI-DAQ':     a signal event happens on the hardware CO

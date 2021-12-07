@@ -282,6 +282,11 @@ if TuneUpdt
                                 SizeImageTune(1),...
                                 SizeImageTune(2),...
                                 SizeImageTune(3) ) );
+    
+    cQRepNum =          getappdata(hFig,	'cQRepNum');
+    DateTime =          getappdata(hFig,    'DateTime');
+    imwrite(PhPwThree_TuneMap,strcat('C:\Users\Freiwald\Desktop\CurrentFigure\',DateTime,'_', num2str(cQRepNum-1),'cycles.png'));
+             
     set(hImageTune,    'CData',        PhPwThree_TuneMap);
         if strcmp(ButtonTag, 'TuneScalebarHue')
             H2 = findobj(gcf, 'tag', 'TuneScalebarSat');
@@ -412,6 +417,35 @@ if PixlUpdt
         'on STD'};
     hLineSpecPixl.YData =       dPtQt_FFTAmp(PtInd, :);
     drawnow;
+% SOC plotting    
+% % % %      lines_this_pixel =      squeeze(dFptCtPhPw_NormTrl(:,:,PhInd,PwInd));
+% % % % % 
+% % % %      figure;
+% % % %      subplot(2,1,1)
+% % % %      plot(0.2:0.2:20,lines_this_pixel)
+% % % % % 
+% % % %      lines_this_pixel_2 = lines_this_pixel;
+% % % %      for a = 1:20
+% % % %          lines_this_pixel_2(:,a) = lines_this_pixel_2(:,a) + a * 0.01;
+% % % %      end
+% % % % %     
+% % % % %     
+% % % % %     %lines_this_pixel_2 = lines_this_pixel;
+% % % % %     
+% % % % %     lines_this_pixel_2(end-2:end,:) = NaN;
+% % % % %     lines_this_pixel_2 = lines_this_pixel_2(:)';
+% % % % %     lines_this_pixel_2 = lines_this_pixel_2(~isnan(lines_this_pixel_2));
+% % % % %     lines_this_pixel_2 = lines_this_pixel_2(1:1900);
+% % % % %     lines_this_pixel_2 = reshape(lines_this_pixel_2,100,19);
+% % % % %     subplot(2,1,2)
+% % % % %     plot(0.2:0.2:20,lines_this_pixel_2)
+% % % % %     
+% % % %      
+% % % % 
+% % % % 
+% % % %      subplot(2,1,2)
+% % % %      plot(0.2:0.2:20,lines_this_pixel_2)
+    
 end
 %% Title clipping
 if TitlUpdt

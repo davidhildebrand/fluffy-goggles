@@ -6,13 +6,15 @@ clear global
 global A P S stm
 %% Get preprocessed ('*.rec') file
 [~, A.Sys.pcname] = system('hostname');
-if strcmp(A.Sys.pcname(1:end-1), 'FANTASIA-425')
-    % if current computer is the recording computer 
-        A.Sys.folder = 'D:\=XINTRINSIC=\';    
-else
-    % if current computer is NOT a recording computer
-        A.Sys.folder = 'X:\';       
-end
+% if strcmp(A.Sys.pcname(1:end-1), 'FANTASIA-425')
+%     % if current computer is the recording computer 
+%         A.Sys.folder = 'D:\=XINTRINSIC=\';    
+% else
+%     % if current computer is NOT a recording computer
+%         A.Sys.folder = 'X:\';       
+% end
+
+A.Sys.folder = 'D:\XINTRINSIC\';
 
 if nargin ==0
     % Calling from direct running of the function

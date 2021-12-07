@@ -24,13 +24,15 @@ global stm sys
 %% Specify Session Parameters
 stm.Vis.SesTime =  datestr(now, 30);
 % locate the screen number
-for i = 1: max(Screen('Screens'))
-    info = Screen('Resolution', i);
-    if info.hz ==144
-        sys.screenNumber = i;
-        break
-    end
-end
+% for i = 1: max(Screen('Screens'))
+%     info = Screen('Resolution', i);
+%     if info.height ==2560
+%         sys.screenNumber = i;
+%         break
+%     end
+% end
+
+sys.screenNumber = max(Screen('Screens'));
 
 stm.SR =                100e3;
 stm.SesDurTotal =       400;                                
@@ -49,7 +51,7 @@ stm.Vis.PicDur =        0.5;
                                 %   F:Face;	B:Body;     O:Object;
                                 %   P:Phase scambled;   S:Spatial scambled
 
-stm.Vis.SesOptionContrast = 'AvF';  % Animals               vs Faces
+% stm.Vis.SesOptionContrast = 'AvF';  % Animals               vs Faces
 % stm.Vis.SesOptionContrast = 'VvF';  % Fruits & Vegetables	vs Faces
 % stm.Vis.SesOptionContrast = 'OvF';  % Familiar Objects  	vs Faces
 % stm.Vis.SesOptionContrast = 'UvF';  % Unfamiliar Objects  	vs Faces
@@ -60,7 +62,7 @@ stm.Vis.SesOptionContrast = 'AvF';  % Animals               vs Faces
 % stm.Vis.SesOptionContrast = 'BvF';	% Body Parts            vs Faces
 % stm.Vis.SesOptionContrast = 'OvF';  % Familiar Objects      vs Faces
 % stm.Vis.SesOptionContrast = 'PvF';  % Phase SCRBD Faces     vs Faces 
-% stm.Vis.SesOptionContrast = 'SvF';  % Spatial SCRBD Faces   vs Faces 
+ stm.Vis.SesOptionContrast = 'SvF';  % Spatial SCRBD Faces   vs Faces 
 % stm.Vis.SesOptionContrast = 'OvB';  % Familiar Object       vs Body
 
 
@@ -100,7 +102,7 @@ end
                                                 Screen('WindowSize', stm.Vis.windowPtr);
 % Query: the frame duration
 stm.Vis.TrialIFI =                              Screen('GetFlipInterval', stm.Vis.windowPtr);
-if abs(stm.Vis.TrialIFI - 1/144)/(1/144) > 0.05
+if abs(stm.Vis.TrialIFI - 1/59)/(1/59) > 0.05 % 1/144)/(1/144) > 0.05 %SOC. 
     errordlg('screen is not at right refresh rate!');
     return;
 end
@@ -127,7 +129,7 @@ switch stm.Vis.PicSource
 end
      
 % read in texture patches
-stm.Vis.TexImDir =	['D:\GitHub\EyeTrackerCalibration\facephase', stm.Vis.PicSource, '\'];
+stm.Vis.TexImDir =	['E:\FreiwaldSync\XINTRINSIC\Stimuli\Visual', stm.Vis.PicSource, '\'];
 for i = 1:20
     if strcmp(stm.Vis.PicSource(1:5), '\P002') || strcmp(stm.Vis.PicSource(1:5), '\Last')   
         stm.Vis.TexImFaceOri{i} =	imread([stm.Vis.TexImDir 'SHINEd_m'  num2str(i) '.tif']);
@@ -176,7 +178,7 @@ end
         stm.Vis.TexIdxAll =     stm.Vis.TexIdxAll(:,[1 1 1 2 3],:);
         switch stm.Vis.SesOptionContrast
             case 'PvF';	stm.Vis.TexSeq = [ 2*ones(1,stm.Vis.CyclePicNumHf) 1*ones(1,stm.Vis.CyclePicNum) 2*ones(1,stm.Vis.CyclePicNumHf)];
-            case 'SvF';	stm.Vis.TexSeq = [ 3*ones(1,stm.Vis.CyclePicNumHf) 1*ones(1,stm.Vis.CyclePicNum) 3*ones(1,stm.Vis.CyclePicNumHf)];
+            case 'SvF';	disp('hi'); stm.Vis.TexSeq = [ 3*ones(1,stm.Vis.CyclePicNumHf) 1*ones(1,stm.Vis.CyclePicNum) 3*ones(1,stm.Vis.CyclePicNumHf)];
             case 'BvF';	stm.Vis.TexSeq = [ 4*ones(1,stm.Vis.CyclePicNumHf) 1*ones(1,stm.Vis.CyclePicNum) 4*ones(1,stm.Vis.CyclePicNumHf)];
             case 'OvF';	stm.Vis.TexSeq = [ 5*ones(1,stm.Vis.CyclePicNumHf) 1*ones(1,stm.Vis.CyclePicNum) 5*ones(1,stm.Vis.CyclePicNumHf)];
             case 'OvB';	stm.Vis.TexSeq = [ 5*ones(1,stm.Vis.CyclePicNumHf) 4*ones(1,stm.Vis.CyclePicNum) 5*ones(1,stm.Vis.CyclePicNumHf)];
@@ -187,6 +189,7 @@ end
                         [1:stm.Vis.CyclePicNumHf    1:stm.Vis.CyclePicNum    1:stm.Vis.CyclePicNumHf]   ];
 
 %% NI-DAQ
+
 sys.NIDAQ.D.InTimebaseRate =    stm.SR;
 sys.NIDAQ.D.CycleSmplHigh =     2;
 sys.NIDAQ.D.CycleSmplLow =      sys.NIDAQ.D.InTimebaseRate * stm.Vis.CycleDurTotal - ...
@@ -194,7 +197,7 @@ sys.NIDAQ.D.CycleSmplLow =      sys.NIDAQ.D.InTimebaseRate * stm.Vis.CycleDurTot
 import dabs.ni.daqmx.*
 sys.NIDAQ.TaskCO = Task('Recording Session Cycle Switcher3');
 sys.NIDAQ.TaskCO.createCOPulseChanTicks(...
-    'Dev3', 1, 'Cycle Counter', '100kHzTimebase', ...
+    'Dev1', 1, 'Cycle Counter', '100kHzTimebase', ...
     sys.NIDAQ.D.CycleSmplLow, sys.NIDAQ.D.CycleSmplHigh,...
     0, 'DAQmx_Val_Low');
 sys.NIDAQ.TaskCO.cfgImplicitTiming(...
@@ -245,6 +248,6 @@ pause(0.5);
         end
 Screen('Close') 
 close all;
-save(['D:\=XINTRINSIC=\' stm.Vis.SesTime '_VisSeqData.mat'], 'stm', '-v7.3');
+save(['D:\XINTRINSIC\VisSeqData\' stm.Vis.SesTime '_VisSeqData.mat'], 'stm', '-v7.3');
 sca;
 % dos('C:\Windows\System32\DisplaySwitch.exe /clone');
