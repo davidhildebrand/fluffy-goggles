@@ -80,22 +80,22 @@ for i = 1: length(T.FileName)
             R.SesTrlNumTotal =      length(S.SesTrlOrderVec);
             R.SysCamFramePerTrial =	S.TrlDurTotal * R.SysCamFrameRate;
     % Other Paremeters (for files after 2020/11/27)
-%     if isfield(S, 'SysCamFrameRate')
-%             R.SysCamFrameRate =     S.SysCamFrameRate;
-%             R.SysCamBinNumber =     S.SysCamBinNumber;
-%             R.SysCamPixelHeight =   S.SysCamResolution(1)/S.SysCamBinNumber;
-%             R.SysCamPixelWidth =    S.SysCamResolution(2)/S.SysCamBinNumber;
-%     end
+    if isfield(S, 'SysCamFrameRate')
+            R.SysCamFrameRate =     S.SysCamFrameRate;
+            R.SysCamBinNumber =     S.SysCamBinNumber;
+            R.SysCamPixelHeight =   S.SysCamResolution(1)/S.SysCamBinNumber;
+            R.SysCamPixelWidth =    S.SysCamResolution(2)/S.SysCamBinNumber;
+    end
     %% Proc Parameters
     %% Poc Parameter initialization for Spatial & Temporal Binning  
     P.ProcCamPixelHeight =	R.SysCamPixelHeight/P.ProcPixelBinNum;
     P.ProcCamPixelWidth =	R.SysCamPixelWidth /P.ProcPixelBinNum;
     P.ProcFrameBinNum = R.SysCamFrameRate/P.ProcFrameRate; 
     
-     S.SesDurTotal = S.SesDurTotal;
-     S.SesFrameTotal = S.SesFrameTotal;
-     S.SesCycleNumTotal = S.SesCycleNumTotal;
-     R.SesTrlNumTotal = R.SesTrlNumTotal;
+    % S.SesDurTotal = S.SesDurTotal;
+    % S.SesFrameTotal = S.SesFrameTotal;
+    % S.SesCycleNumTotal = S.SesCycleNumTotal;
+    % R.SesTrlNumTotal = R.SesTrlNumTotal;
      
     P.ProcFramePerTrial =       S.TrlDurTotal * P.ProcFrameRate;   
     P.ProcFrameNumTotal =       S.SesFrameTotal / P.ProcFrameBinNum;

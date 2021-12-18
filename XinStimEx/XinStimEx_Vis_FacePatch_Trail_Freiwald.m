@@ -34,8 +34,7 @@ stm.Vis.SesTime =  datestr(now, 30);
 %     end
 % end
 
-% 
- sys.screenNumber = max(Screen('Screens'));
+sys.screenNumber = max(Screen('Screens'));
 
 
 stm.SR =                100e3;
