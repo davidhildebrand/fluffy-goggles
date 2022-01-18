@@ -5,9 +5,7 @@ global S P Tm Sys
 % P:    Processed, To be saved
 % Tm: 	Temporary
 % Sys:  System parameters, if not in "S" yet
-P = [];
-Tm =[];
-Sys = [];
+P = [];     Tm =[];     Sys = []; 
 
 gaussian_filter = 0;
 
@@ -49,8 +47,7 @@ if nargin == 0
     % Calling from direct running of the function
     Tm.RunningSource =   'D';
     [Tm.FileName, Tm.PathName, Tm.FilterIndex] = uigetfile(...
-        [Tm.folder '*.rec'], ...
-        'Select raw recording files to process',...
+        [Tm.folder '*.rec'], 'Select raw recording files to process',...
         'MultiSelect','On');
     if Tm.FilterIndex == 0            
         return;                         % nothing selected
@@ -174,10 +171,10 @@ for i = 1: length(Tm.FileName)
             Tm.TrialOrder =          S.SesTrlOrderVec(m);            
             %% Image Processing
             Tm.PixelMeanRaw =        mean(Tm.DataRaw, 1);
-            Tm.PixelMeanBinned =     mean(reshape(...
+            Tm.PixelMeanBinned =     mean( reshape(...
                                                 Tm.PixelMeanRaw,...
                                                 P.ProcFrameBinNum,...
-                                                P.ProcFramePerTrial), 1);
+                                                P.ProcFramePerTrial), 1 );
             P.RawMeanPixel(Tm.RecFramesCurrent) =    Tm.PixelMeanRaw;
             P.ProcMeanPixel(Tm.ProcFramesCurrent) =  Tm.PixelMeanBinned;  
             
@@ -200,11 +197,11 @@ for i = 1: length(Tm.FileName)
             Tm.ImageS4 =         sum(Tm.ImageS3, 5);
             Tm.ImageS5 =         squeeze(Tm.ImageS4);
             
-            P.ProcDataMat(j, Tm.TrialOrder, :, :, :) = ...
+            P.ProcDataMat(j, Tm.TrialOrder, :, :, :) =...
             	uint32(Tm.ImageS5(	P.ProcCamHeightIndex, ...
                                  	P.ProcCamWidthIndex, :));
             % P.ProcDataMat Dimension: 
-            %   1:Cycle;    2:Trial;    3:Height;   4:Width;    5:Frame;
+            %   1:Cycle;    2:Trial;    3:Height;   4:Width;    5:Frame;                         
         end    
     end
     % Power Processing
