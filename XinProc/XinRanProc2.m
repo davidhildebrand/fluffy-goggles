@@ -16,24 +16,24 @@ gaussian_filter = 0;
     Tm.SysDeft.SysCamBinNumber =	4;
     Tm.SysDeft.SysCamPixelHeight =	300;
     Tm.SysDeft.SysCamPixelWidth =	480;
-    Tm.SysDeft.ProcPixelBinNum =	4;
-    Tm.SysDeft.ProcFrameRate =      5;
-% System: FLIR/PointGrey GS3
+        Tm.SysDeft.ProcPixelBinNum =	4;
+        Tm.SysDeft.ProcFrameRate =      5;
+% System: FLIR/PointGrey GS3 
     Tm.SysFlir.SysCamFrameRate =	80;
     Tm.SysFlir.SysCamBinNumber =	4;
     Tm.SysFlir.SysCamPixelHeight =	300;
     Tm.SysFlir.SysCamPixelWidth =	480;
-    Tm.SysFlir.ProcPixelBinNum =	4; % or 2?
-    Tm.SysFlir.ProcFrameRate =      5;
-    %Tm.SysFlir.ProcPixelBinNum =	1;
+        Tm.SysFlir.ProcPixelBinNum =	4; % or 2?
+        Tm.SysFlir.ProcFrameRate =      5;
+%    Tm.SysFlir.ProcPixelBinNum =	1;
 % System: Thorlabs sCMOS
     Tm.SysThor.SysCamFrameRate =	20;
-    %Tm.SysThor.SysCamBinNumber =	4;
+%    Tm.SysThor.SysCamBinNumber =	4;
     Tm.SysThor.SysCamBinNumber =	6;
     Tm.SysThor.SysCamPixelHeight =	270;
     Tm.SysThor.SysCamPixelWidth =	480;
-    Tm.SysThor.ProcPixelBinNum =	3;
-    Tm.SysThor.ProcFrameRate =      5;
+        Tm.SysThor.ProcPixelBinNum =	3;
+        Tm.SysThor.ProcFrameRate =      5;
 
 %% Get preprocessed ('*.rec') file
 [~, Tm.pcname] = system('hostname');
@@ -43,12 +43,11 @@ else                                        % NOT recording computer
         Tm.folder = fullfile('D:','XINTRINSIC');
 end
 
-if nargin == 0
-    % Calling from direct running of the function
+if nargin ==0           % Calling from direct running of the function
     Tm.RunningSource =   'D';
     [Tm.FileName, Tm.PathName, Tm.FilterIndex] = uigetfile(...
         [Tm.folder '*.rec'], 'Select raw recording files to process',...
-        'MultiSelect','On');
+        'MultiSelect',              'On');
     if Tm.FilterIndex == 0            
         return;                         % nothing selected
     end
