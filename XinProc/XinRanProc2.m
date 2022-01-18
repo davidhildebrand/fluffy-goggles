@@ -25,7 +25,7 @@ gaussian_filter = 0;
     Tm.SysFlir.SysCamPixelWidth =	480;
         Tm.SysFlir.ProcPixelBinNum =	4; % or 2?
         Tm.SysFlir.ProcFrameRate =      5;
-%    Tm.SysFlir.ProcPixelBinNum =	1;
+%       Tm.SysFlir.ProcPixelBinNum =	1;
 % System: Thorlabs sCMOS
     Tm.SysThor.SysCamFrameRate =	20;
 %    Tm.SysThor.SysCamBinNumber =	4;
