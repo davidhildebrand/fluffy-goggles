@@ -1,20 +1,18 @@
 function XinRanProc1_FaceTrial(varargin)
 % Xintrinsic preProcessing 1 
-% DATA BINNNING
+% DATA BINNING
 
 clear global
 global A P S stm
 %% Get preprocessed ('*.rec') file
 [~, A.Sys.pcname] = system('hostname');
-% if strcmp(A.Sys.pcname(1:end-1), 'FANTASIA-425')
-%     % if current computer is the recording computer 
-%         A.Sys.folder = 'D:\=XINTRINSIC=\';    
-% else
-%     % if current computer is NOT a recording computer
-%         A.Sys.folder = 'X:\';       
-% end
-
-A.Sys.folder = 'D:\XINTRINSIC\';
+if strcmp(A.Sys.pcname(1:end-1), 'Intrinsic')
+    % if current computer is the recording computer 
+        A.Sys.folder = 'D:\XINTRINSIC\';    
+else
+    % if current computer is NOT a recording computer
+        A.Sys.folder = 'D:\XINTRINSIC\';       
+end
 
 if nargin ==0
     % Calling from direct running of the function
@@ -63,8 +61,8 @@ P.ProcFrameBinNum =             A.sysCamFrameRate/P.ProcFrameRate;
 A.Sys.hWaitbar =                    waitbar(0, 'processing');
 
 %% Get the Visual Stim infomation in *VisSeqData.mat'
-A.FileList = dir('D:\XINTRINSIC\VisSeqData\');
-A.FolderFileList = dir('D:\XINTRINSIC\VisSeqData\');
+A.FileList = dir('D:\XINTRINSIC_from_MarmoLord\VisSeqData\');
+A.FolderFileList = dir('D:\XINTRINSIC_from_MarmoLord\VisSeqData\');
 A.VisSeqDataList = struct('name',[], 'folder',[], 'date', [], 'bytes', [], 'isdir', [], 'datenum', []);
 A.VisSeqDataDatenum = [];
 A.VisSeqDataNumTotal = 0;

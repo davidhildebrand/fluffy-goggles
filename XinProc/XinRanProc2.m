@@ -5,7 +5,7 @@ global S P Tm Sys
 % P:    Processed, To be saved
 % Tm: 	Temporary
 % Sys:  System parameters, if not in "S" yet
-P = [];     Tm =[];     Sys = []; 
+P = [];     Tm = [];     Sys = []; 
 
 gaussian_filter = 0;
 
@@ -46,7 +46,7 @@ end
 if nargin ==0           % Calling from direct running of the function
     Tm.RunningSource =   'D';
     [Tm.FileName, Tm.PathName, Tm.FilterIndex] = uigetfile(...
-        [Tm.folder '*.rec'], 'Select raw recording files to process',...
+        ['*.rec'], 'Select raw recording files to process',... %SOC [Tm.folder '*.rec'], 'Select raw recording files to process',...
         'MultiSelect',              'On');
     if Tm.FilterIndex == 0            
         return;                         % nothing selected
@@ -73,14 +73,22 @@ for i = 1: length(Tm.FileName)
             '" with the sound: "', S.SesSoundFile, '"']);
 	% Default Paremeters (for files older than 2020/11/27)
     Sys = Tm.SysDeft;
+    
+    if ~isfield('S', 'SysCamMain')
+        S.SysCamMain = 'PointGrey';
+    end
+    if ~isfield('S', 'SysCamDeviceName')
+        S.SysCamDeviceName = 'Grasshopper3 GS3-U3-23S6M';
+    end
 	switch [S.SysCamMain '_' S.SysCamDeviceName]
         case 'PointGrey_Grasshopper3 GS3-U3-23S6M'
             Sys = Tm.SysFlir;
         case 'Thorlabs_CS2100M-USB'
-            Sys = Tm.SysThor;
+           Sys = Tm.SysThor;
         otherwise
-            disp('unrecognizable camera')
+           disp('unrecognizable camera')
     end
+    
     % overwrite if available (for files after 2020/11/27)
     if isfield(S, 'SysCamFrameRate')
         Sys.SysCamFrameRate =       S.SysCamFrameRate;

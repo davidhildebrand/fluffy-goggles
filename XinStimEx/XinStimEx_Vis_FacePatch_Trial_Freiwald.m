@@ -3,7 +3,7 @@ function XinStimEx_Vis_FacePatch_Trail
 %% Switch multi-display mode
 clear all
 Screen('Close') 
-if max(Screen('Screens')) ~=3
+if max(Screen('Screens')) ~=2
     opts = struct(  'WindowStyle',  'modal',... 
                     'Interpreter',  'tex');
     errordlg(...
@@ -160,7 +160,7 @@ stm.Vis.MonitorTexPatchPos = round([1280 -720 -1280 720] * ...
     stm.Vis.MonitorPixelAngle_Wang / stm.Vis.MonitorPixelAngle_Freiwald); %SOC.%[1280 -720 -1280 720]; 
                           
 % read in texture patches
-stm.Vis.TexImDir =	['E:\FreiwaldSync\XINTRINSIC\Stimuli\Visual', stm.Vis.PicSource, '\'];
+stm.Vis.TexImDir =	['C:\FreiwaldSync\XINTRINSIC\Stimuli\Visual', stm.Vis.PicSource, '\'];
 for i = 1:stm.Vis.TrlNumTotal
     switch stm.Vis.TrlNames{i}
         case 'F';   stm.Vis.TexImFileFormat{i} = 'SHINEd_m%d.tif';
