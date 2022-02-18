@@ -1,4 +1,4 @@
-function XinStimEx_Vis_FacePatch_Trail
+function XinStimEx_Vis_FacePatch_Trial
 
 %% Switch multi-display mode
 clear all
