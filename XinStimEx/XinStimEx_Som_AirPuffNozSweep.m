@@ -129,7 +129,7 @@ sys.taskName = 'Air Puff Nozzle Multiple';
 import dabs.ni.daqmx.*
 sys.NIDAQ.TaskDO = Task(sys.taskName);
 sys.NIDAQ.TaskDO.createDOChan(...
-    'Dev3',     'port0/line0:7');
+    'Intrinsic_PCIe6323',     'port0/line0:7');
 sys.NIDAQ.TaskDO.cfgSampClkTiming(...
 	stm.SR,     'DAQmx_Val_ContSamps',	stm.Som.TrialTime*stm.SR);
 if stm.Som.HardwareTrigger 
@@ -148,7 +148,7 @@ sys.NIDAQ.TaskDO.delete;
 % Reset
     sys.NIDAQ.TaskDO = Task(sys.taskName);
     sys.NIDAQ.TaskDO.createDOChan(...
-        'Dev3',     'port0/line0:7');
+        'Intrinsic_PCIe6323',     'port0/line0:7');
     sys.NIDAQ.TaskDO.cfgSampClkTiming(...
         stm.SR,     'DAQmx_Val_ContSamps',	stm.Som.TrialTime*stm.SR);
     sys.NIDAQ.TaskDO.writeDigitalData(      uint32(stm.Som.seq*0));
