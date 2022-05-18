@@ -1,38 +1,29 @@
 %% MT localizer with multiple options
 
 %% Switch multi-display mode
-if max(Screen('Screens')) ~=3
+if max(Screen('Screens')) ~= 2
     opts = struct(  'WindowStyle',  'modal',... 
                     'Interpreter',  'tex');
     errordlg(...
-        [   '\fontsize{20} The monitors are not in all extended mode \newline ',...
-            'Close thecurrent Matlab \newline',...
+        [   '\fontsize{20} The monitors are not in extended mode \newline ',...
+            'Close this MATLAB instance \newline',...
             'Extend all screens in windows \newline' ,...
-            'And restart Matlab'],...
+            'And re-open MATLAB'],...
         '', opts)
     return
-else
-    
 end
 dos('C:\Windows\System32\DisplaySwitch.exe /extend');
-sca;                    % Clear the screen       
-pause(2);
-% close all;
-clearvars;              % Clear the workspace
-global stm sys
-
-%% Specify Session Parameters
-stm.Vis.SesTime =  datestr(now, 30);
-% locate the screen number
-% for i = 1: max(Screen('Screens'))
-%     info = Screen('Resolution', i);
-%     if info.height ==2560
-%         sys.screenNumber = i;
-%         break
-%     end
-% end
+sca;       
+pause(0.5);
 
 sys.screenNumber = max(Screen('Screens'));
+for i = 1: max(Screen('Screens'))
+    info = Screen('Resolution', i);
+    if info.hz == 144
+        sys.screenNumber = i;
+        break
+    end
+end
 
 stm.SR =                100e3;
 stm.SesDurTotal =       60;  
@@ -45,13 +36,11 @@ stm.Vis.CycleDurTotal =         20;     % in second
 % stm.Vis.PicSource = '\P002\pink_song_pattern';
 % stm.Vis.PicSource = '\P002\pink_song_shifthalf';
 stm.Vis.PicSource = '\Last\shifthalf';
-
-% stm.Vis.PicBackground = 'white';
 stm.Vis.PicBackground = 'gray';
 stm.Vis.PicDur =        0.5;
 
-                                %   F:Face;	B:Body;     O:Object;
-                                %   P:Phase scambled;   S:Spatial scambled
+%   F:Face;	B:Body;     O:Object;
+%   P:Phase scambled;   S:Spatial scambled
 
 % stm.Vis.SesOptionContrast = 'AvF';  % Animals               vs Faces
 % stm.Vis.SesOptionContrast = 'VvF';  % Fruits & Vegetables	vs Faces
@@ -67,37 +56,38 @@ stm.Vis.PicDur =        0.5;
 % stm.Vis.SesOptionContrast = 'SvF';  % Spatial SCRBD Faces   vs Faces 
 % stm.Vis.SesOptionContrast = 'OvB';  % Familiar Object       vs Body
 
-
-
 %% Visual CO Parameters
 % Session Timer 
 
-stm.Vis.CycleNumTotal =         stm.SesDurTotal/stm.Vis.CycleDurTotal;     % rep # total
+stm.Vis.CycleNumTotal =         stm.SesDurTotal / stm.Vis.CycleDurTotal;     % rep # total
 stm.Vis.CycleNumCurrent =       0;
 stm.Vis.CycleDurCurrentTimer =	tic;
-stm.Vis.CyclePicNum =           round(stm.Vis.CycleDurTotal/2/stm.Vis.PicDur);
-stm.Vis.CyclePicNumHf =         round(stm.Vis.CyclePicNum/2);
-
+stm.Vis.CyclePicNum =           round((stm.Vis.CycleDurTotal / 2) / stm.Vis.PicDur);
+stm.Vis.CyclePicNumHf =         round(stm.Vis.CyclePicNum / 2);
 
 %% Prepare the Psychtoolbox window
 % Here we call some default settings for setting up Psychtoolbox
-                                                PsychDefaultSetup(2);
+PsychDefaultSetup(2);
 % Define shades
 white = WhiteIndex(sys.screenNumber);
 black = BlackIndex(sys.screenNumber);   
-gray =  GrayIndex(sys.screenNumber, 0.5);   
-                                                Screen('Preference', 'VisualDebugLevel', 1);
-                                                Screen('Preference', 'SkipSyncTests', 1);
+gray =  GrayIndex(sys.screenNumber, 0.5);
+Screen('Preference', 'VisualDebugLevel', 1);
+Screen('Preference', 'SkipSyncTests', 1);
 % Open an on screen window
 switch stm.Vis.PicBackground
-    case 'white';	[stm.Vis.windowPtr, windowRect] = PsychImaging('OpenWindow', sys.screenNumber, white);
-    case 'black';	[stm.Vis.windowPtr, windowRect] = PsychImaging('OpenWindow', sys.screenNumber, black);
-    case 'gray';    [stm.Vis.windowPtr, windowRect] = PsychImaging('OpenWindow', sys.screenNumber, gray);
+    case 'white'
+        bgcolor = white;
+    case 'black'
+        bgcolor = black;
+    case 'gray'
+        bgcolor = gray;
 end
+[stm.Vis.windowPtr, windowRect] = PsychImaging('OpenWindow', sys.screenNumber, bgcolor);
 
-% Query: the frame duration
-stm.Vis.TrialIFI =                              Screen('GetFlipInterval', stm.Vis.windowPtr);
-if abs(stm.Vis.TrialIFI - 1/59)/(1/59) > 0.05 % 1/144)/(1/144) > 0.05 %SOC. 
+% Check frame duration
+stm.Vis.TrialIFI = Screen('GetFlipInterval', stm.Vis.windowPtr);
+if (abs(stm.Vis.TrialIFI - 1/144) / (1/144)) > 0.05 % 1/59)/(1/59) > 0.05 
     errordlg('screen is not at right refresh rate!');
     return;
 end
@@ -107,31 +97,31 @@ vbl = Screen('Flip', stm.Vis.windowPtr);
 
 %Wang
 stm.Vis.MonitorDistance =   75;             % in cm
-stm.Vis.MonitorHeight =     0.02724*1440;	% in cm
-stm.Vis.MonitorWidth =      0.02724*2560;	% in cm
-stm.Vis.MonitorPixelNumX = 2560;
-stm.Vis.MonitorPixelNumY = 1440;
+stm.Vis.MonitorHeight =     0.02724 * 1440;	% in cm
+stm.Vis.MonitorWidth =      0.02724 * 2560;	% in cm
+stm.Vis.MonitorPixelNumX =  2560;
+stm.Vis.MonitorPixelNumY =  1440;
 
-stm.Vis.MonitorAngleX =         2*atan(stm.Vis.MonitorWidth/2/stm.Vis.MonitorDistance)/pi*180;  
-stm.Vis.MonitorAngleY =         2*atan(stm.Vis.MonitorHeight/2/stm.Vis.MonitorDistance)/pi*180;
-stm.Vis.MonitorPixelAngleX =    stm.Vis.MonitorAngleX/stm.Vis.MonitorPixelNumX;
-stm.Vis.MonitorPixelAngleY =    stm.Vis.MonitorAngleY/stm.Vis.MonitorPixelNumY;
+stm.Vis.MonitorAngleX =         2 * atan((stm.Vis.MonitorWidth / 2) / stm.Vis.MonitorDistance)/pi * 180;  
+stm.Vis.MonitorAngleY =         2 * atan((stm.Vis.MonitorHeight / 2) / stm.Vis.MonitorDistance)/pi * 180;
+stm.Vis.MonitorPixelAngleX =    stm.Vis.MonitorAngleX / stm.Vis.MonitorPixelNumX;
+stm.Vis.MonitorPixelAngleY =    stm.Vis.MonitorAngleY / stm.Vis.MonitorPixelNumY;
 
-stm.Vis.MonitorPixelAngle_Wang =     mean([stm.Vis.MonitorPixelAngleX stm.Vis.MonitorPixelAngleY]);
+stm.Vis.MonitorPixelAngle_Wang = mean([stm.Vis.MonitorPixelAngleX stm.Vis.MonitorPixelAngleY]);
 
 %Freiwald
-stm.Vis.MonitorDistance =   20;             % in cm
-stm.Vis.MonitorHeight =     16.5375;	% in cm
-stm.Vis.MonitorWidth =      29.4;	% in cm
+stm.Vis.MonitorDistance =   20;         % in cm
+stm.Vis.MonitorHeight =     193.5 / 10; % in cm  % or 0.026875 cm/px
+stm.Vis.MonitorWidth =      344 / 10;   % in cm  % or 0.026875 cm/px
 [stm.Vis.MonitorPixelNumX, stm.Vis.MonitorPixelNumY] = ...
                                                 Screen('WindowSize', stm.Vis.windowPtr);
                                            
-stm.Vis.MonitorAngleX =         2*atan(stm.Vis.MonitorWidth/2/stm.Vis.MonitorDistance)/pi*180;  
-stm.Vis.MonitorAngleY =         2*atan(stm.Vis.MonitorHeight/2/stm.Vis.MonitorDistance)/pi*180;
-stm.Vis.MonitorPixelAngleX =    stm.Vis.MonitorAngleX/stm.Vis.MonitorPixelNumX;
-stm.Vis.MonitorPixelAngleY =    stm.Vis.MonitorAngleY/stm.Vis.MonitorPixelNumY;
+stm.Vis.MonitorAngleX =         2 * atan((stm.Vis.MonitorWidth/2) / stm.Vis.MonitorDistance)/pi * 180;  
+stm.Vis.MonitorAngleY =         2 * atan((stm.Vis.MonitorHeight/2) / stm.Vis.MonitorDistance)/pi * 180;
+stm.Vis.MonitorPixelAngleX =    stm.Vis.MonitorAngleX / stm.Vis.MonitorPixelNumX;
+stm.Vis.MonitorPixelAngleY =    stm.Vis.MonitorAngleY / stm.Vis.MonitorPixelNumY;
 
-stm.Vis.MonitorPixelAngle_Freiwald =     mean([stm.Vis.MonitorPixelAngleX stm.Vis.MonitorPixelAngleY]);
+stm.Vis.MonitorPixelAngle_Freiwald = mean([stm.Vis.MonitorPixelAngleX stm.Vis.MonitorPixelAngleY]);
 
 
 %% Initialize parameters
@@ -248,7 +238,7 @@ while stm.Vis.Running
         stm.Vis.TexIdxCurrent =	...
             min(ceil(stm.Vis.CycleDurTotalCurrent/stm.Vis.PicDur), length(stm.Vis.TexSeq));
         if stm.Vis.TexIdxCurrent ~= a
-            disp([sprintf('frame time:   '), datestr(now, 'HH:MM:SS.FFF')]);
+            fprintf('.'); %disp([sprintf('frame time:   '), datestr(now, 'HH:MM:SS.FFF')]);
             Screen('DrawTextures', stm.Vis.windowPtr,...
                 stm.Vis.TexInd(...
                     stm.Vis.TexIdxAll(...
@@ -264,12 +254,14 @@ while stm.Vis.Running
 	pause(0.01);
 end
 
+Screen('FillRect', stm.Vis.windowPtr, bgcolor);
+Screen('Flip', stm.Vis.windowPtr);
+
 %% Clean up
 pause(0.5);
-        try sys.MsgBox.delete();    catch
-        end
-Screen('Close') 
-close all;
-save(['D:\XINTRINSIC\VisSeqData\' stm.Vis.SesTime '_VisSeqData.mat'], 'stm', '-v7.3');
+try sys.MsgBox.delete();
+catch
+end
+Screen('Close');
 sca;
 % dos('C:\Windows\System32\DisplaySwitch.exe /clone');
