@@ -21,13 +21,14 @@ if toc(stm.SesCycleTimeInitial) > 0.1
     end
 end
 %% Stop the session
-if sys.SesCycleNumCurrent == sys.SesCycleNumTotal + 1  
-    stm.Running =               0;    
+if (sys.SesCycleNumCurrent == sys.SesCycleNumTotal + 1) && (stm.Vis.Running == 1)
+    stm.Running = 0;    
     try
         sys.NIDAQ.TaskCO.abort();
         sys.NIDAQ.TaskCO.delete;
     catch
-        disp('hardware not found, stopping the software timer');
+        disp('Encountered an error when trying to stop the internal stimulus trigger.')
+        disp('Attempting to stop the software timer.');
         sys.TimerH.stop;
         sys.TimerH.delete;
         try sys.MsgBox.delete();    catch
