@@ -1,5 +1,21 @@
 function XinStimEx_Vis_FacePatch_Trial_Freiwald
 
+clearvars stm sys
+global stm sys
+
+sys.TempStimFile = ['D:\XINTRINSIC\', 'TempStimData.mat'];
+if isfile(sys.TempStimFile)
+    load(sys.TempStimFile, 'ExpDataDir', 'StimDir', 'CycleNum', 'CycleDur');
+    stm.DataDir = ExpDataDir;
+    stm.StimDir = StimDir;
+    stm.CycleNum = CycleNum;
+    stm.CycleDur = CycleDur;
+    clear ExpDataDir StimDir CycleNum CycleDur;
+else
+    stm.DataDir = 'D:\XINTRINSIC\';
+    stm.StimDir = 'C:\FreiwaldSync\XINTRINSIC\Stimuli\';
+end
+
 %% Switch multi-display mode
 Screen('Close') 
 if max(Screen('Screens')) ~= 2
@@ -18,16 +34,11 @@ sca;
 pause(0.5);
 
 %% Specify Session Parameters
-stm.Vis.SesTime =  datestr(now, 30);
-% % locate the screen number
-% for i = 1: max(Screen('Screens'))
-%     info = Screen('Resolution', i);
-%     if info.height ==1080
-%         sys.screenNumber = i;
-%         break
-%     end
-% end
-
+stm.Vis.SesTime = now;
+stm.Vis.SesTimeStr = [datestr(stm.Vis.SesTime, 'yyyymmdd'), ...
+    'd', datestr(stm.Vis.SesTime, 'HHMMSS'), 't'];
+stm.Vis.Name = 'FacePatchTrial';
+% locate the screen number or default
 sys.screenNumber = max(Screen('Screens'));
 for i = 1: max(Screen('Screens'))
     info = Screen('Resolution', i);
@@ -63,9 +74,12 @@ stm.Vis.TrlIndexAddAttNum = ones(1, stm.Vis.TrlNumTotal);
 
 %% Visual CO Parameters
 % Session Timer 
-stm.Vis.SesCycleDurTotal =      stm.Vis.TrlDurTotal *stm.Vis.TrlNumTotal;           % in second
-stm.Vis.SesCycleNumTotal =      floor(stm.SesDurTotal/stm.Vis.SesCycleDurTotal);	% rep # total
-stm.Vis.SesDurTotal =           stm.Vis.SesCycleNumTotal*stm.Vis.SesCycleDurTotal;  % in second
+stm.Vis.SesCycleDurTotal =      stm.Vis.TrlDurTotal * stm.Vis.TrlNumTotal;           % in second
+stm.Vis.SesCycleNumTotal =      floor(stm.SesDurTotal / stm.Vis.SesCycleDurTotal);	% rep # total
+if stm.Vis.SesCycleNumTotal == 0
+    error('Provided session duration does not include enough time to cycle through stimuli.')
+end
+stm.Vis.SesDurTotal =           stm.Vis.SesCycleNumTotal * stm.Vis.SesCycleDurTotal;  % in second
 stm.Vis.SesSoundDurTotal =      stm.Vis.SesCycleDurTotal;
 stm.Vis.AddAtts =               0;
 stm.Vis.AddAttNumTotal =        1;
@@ -155,9 +169,9 @@ stm.Vis.MonitorCenter =         [stm.Vis.MonitorPixelNumX/2 stm.Vis.MonitorPixel
 % texture patch display size
 stm.Vis.MonitorTexPatchPos = round([1280 -720 -1280 720] * ...
     stm.Vis.MonitorPixelAngle_Wang / stm.Vis.MonitorPixelAngle_Freiwald); %SOC.%[1280 -720 -1280 720]; 
-                          
+
 % read in texture patches
-stm.Vis.TexImDir =	['C:\FreiwaldSync\XINTRINSIC\Stimuli\Visual', stm.Vis.PicSource, '\'];
+stm.Vis.TexImDir = [stm.StimDir, filesep, 'Visual', filesep, stm.Vis.PicSource, filesep];
 for i = 1:stm.Vis.TrlNumTotal
     switch stm.Vis.TrlNames{i}
         case 'F';   stm.Vis.TexImFileFormat{i} = 'SHINEd_m%d.tif';
@@ -250,9 +264,10 @@ while stm.Vis.Running
 	pause(0.01);
 end
 
-save(['D:\XINTRINSIC\VisSeqData\' stm.Vis.SesTime '_VisSeqData.mat'], 'stm', '-v7.3');
 Screen('FillRect', stm.Vis.windowPtr, bgcolor);
 Screen('Flip', stm.Vis.windowPtr);
+
+save([stm.DataDir, filesep, stm.Vis.SesTimeStr, '_Stimulus_', stm.Vis.Name, '_StimulusData.mat'], 'stm', '-v7.3');
 
 %% Clean up
 pause(0.5);
@@ -261,7 +276,10 @@ catch
 end
 Screen('Close');
 sca;
-% dos('C:\Windows\System32\DisplaySwitch.exe /clone');
+if isfile(sys.TempStimFile)
+    delete(sys.TempStimFile);
+end
+disp('Finished.')
 
 function image = pinknoiseimage(a,b)
 % pn.a = 1440;

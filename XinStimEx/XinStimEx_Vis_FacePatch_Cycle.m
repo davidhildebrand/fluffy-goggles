@@ -1,4 +1,7 @@
-%% MT localizer with multiple options
+%% Face patch localizer
+
+% Run in the same MATLAB instance as XINTRINSIC
+global Xin
 
 %% Switch multi-display mode
 if max(Screen('Screens')) ~=2
@@ -22,7 +25,10 @@ clearvars;              % Clear the workspace
 global stm sys
 
 %% Specify Session Parameters
-stm.Vis.SesTime =  datestr(now, 30);
+stm.Vis.SesTime = now;
+stm.Vis.SesTimeStr = [datestr(stm.Vis.SesTime, 'yyyymmdd'), ...
+    'd', datestr(stm.Vis.SesTime, 'HHMMSS'), 't'];
+stm.Vis.Name = 'FacePatchCycle';
 % locate the screen number
 % for i = 1: max(Screen('Screens'))
 %     info = Screen('Resolution', i);
@@ -248,6 +254,7 @@ pause(0.5);
         end
 Screen('Close') 
 close all;
-save(['D:\XINTRINSIC\VisSeqData\' stm.Vis.SesTime '_VisSeqData.mat'], 'stm', '-v7.3');
+save([Xin.D.Exp.DataDir, filesep, stm.Vis.SesTimeStr, '_', stm.Vis.Name, '_VisSeqData.mat'], 'stm', '-v7.3');
+%save(['D:\XINTRINSIC\VisSeqData\' stm.Vis.SesTime '_VisSeqData.mat'], 'stm', '-v7.3');
 sca;
 % dos('C:\Windows\System32\DisplaySwitch.exe /clone');

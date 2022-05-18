@@ -1,4 +1,20 @@
-%% MT localizer with multiple options
+
+clearvars stm sys
+global stm sys
+
+sys.TempStimFile = ['D:\XINTRINSIC\', 'TempStimData.mat'];
+if isfile(sys.TempStimFile)
+    load(sys.TempStimFile, 'ExpDataDir', 'StimDir', 'CycleNum', 'CycleDur');
+    stm.DataDir = ExpDataDir;
+    stm.StimDir = StimDir;
+    stm.CycleNum = CycleNum;
+    stm.CycleDur = CycleDur;
+    clear ExpDataDir StimDir CycleNum CycleDur;
+else
+    stm.DataDir = 'D:\XINTRINSIC\TESTING_20220402d\';
+    stm.StimDir = 'C:\FreiwaldSync\XINTRINSIC\Stimuli\';
+end
+
 
 %% Switch multi-display mode
 if max(Screen('Screens')) ~= 2
@@ -16,6 +32,12 @@ dos('C:\Windows\System32\DisplaySwitch.exe /extend');
 sca;       
 pause(0.5);
 
+%% Specify session parameters
+stm.Vis.SesTime = now;
+stm.Vis.SesTimeStr = [datestr(stm.Vis.SesTime, 'yyyymmdd'), ...
+    'd', datestr(stm.Vis.SesTime, 'HHMMSS'), 't'];
+stm.Vis.Name = 'FacePatchCycle';
+% locate the screen number or default
 sys.screenNumber = max(Screen('Screens'));
 for i = 1: max(Screen('Screens'))
     info = Screen('Resolution', i);
@@ -26,15 +48,8 @@ for i = 1: max(Screen('Screens'))
 end
 
 stm.SR =                100e3;
-stm.SesDurTotal =       60;  
-stm.Vis.CycleDurTotal =         20;     % in second
-
-% stm.Vis.PicSource = '\Wang\phase_stimuli';
-% stm.Vis.PicSource = '\Hung\phase_stimuli';
-% stm.Vis.PicSource = '\P002\equalized';
-% stm.Vis.PicSource = '\P002\pink2_fullscreen';
-% stm.Vis.PicSource = '\P002\pink_song_pattern';
-% stm.Vis.PicSource = '\P002\pink_song_shifthalf';
+stm.SesDurTotal =       stm.CycleNum * stm.CycleDur; %60;  
+stm.Vis.CycleDurTotal = stm.CycleDur; %20; % in second
 stm.Vis.PicSource = '\Last\shifthalf';
 stm.Vis.PicBackground = 'gray';
 stm.Vis.PicDur =        0.5;
@@ -134,7 +149,7 @@ stm.Vis.MonitorTexPatchPos = round([1280 -720 -1280 720] * ...
     stm.Vis.MonitorPixelAngle_Wang / stm.Vis.MonitorPixelAngle_Freiwald); %SOC.%[1280 -720 -1280 720]; 
                                         
 % read in texture patches
-stm.Vis.TexImDir =	['E:\FreiwaldSync\XINTRINSIC\Stimuli\Visual', stm.Vis.PicSource, '\'];
+stm.Vis.TexImDir = [stm.StimDir, filesep, 'Visual', filesep, stm.Vis.PicSource, filesep];
 for i = 1:20
     if strcmp(stm.Vis.PicSource(1:5), '\P002') || strcmp(stm.Vis.PicSource(1:5), '\Last')   
         stm.Vis.TexImFaceOri{i} =	imread([stm.Vis.TexImDir 'SHINEd_m'  num2str(i) '.tif']);
@@ -257,6 +272,10 @@ end
 Screen('FillRect', stm.Vis.windowPtr, bgcolor);
 Screen('Flip', stm.Vis.windowPtr);
 
+%save(['D:\XINTRINSIC\VisSeqData\' stm.Vis.SesTime '_VisSeqData.mat'], 'stm', '-v7.3');
+%save([stm.DataDir, filesep, stm.Vis.SesTimeStr, '_', stm.Vis.Name, '_VisSeqData.mat'], 'stm', '-v7.3');
+save([stm.DataDir, filesep, stm.Vis.SesTimeStr, '_Stimulus_', stm.Vis.Name, '_SequenceData.mat'], 'stm', '-v7.3');
+
 %% Clean up
 pause(0.5);
 try sys.MsgBox.delete();
@@ -264,4 +283,6 @@ catch
 end
 Screen('Close');
 sca;
-% dos('C:\Windows\System32\DisplaySwitch.exe /clone');
+if isfile(sys.TempStimFile)
+    delete(sys.TempStimFile);
+end
