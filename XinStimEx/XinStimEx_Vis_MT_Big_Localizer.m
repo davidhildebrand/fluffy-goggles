@@ -1,5 +1,8 @@
 %% MT localizer with multiple options
 
+clearvars stm sys
+global stm sys
+
 %% Switch multi-display mode
 if max(Screen('Screens')) ~=2
     opts = struct(  'WindowStyle',  'modal',... 
@@ -16,11 +19,8 @@ else
 end
 Screen('Close');
 dos('C:\Windows\System32\DisplaySwitch.exe /extend');
-sca;                    % Clear the screen       
-pause(2);
-% close all;
-clearvars;              % Clear the workspace
-global stm sys
+sca;      
+pause(0.5);
 
 %% Specify Session Parameters
 % locate the screen number
@@ -69,19 +69,20 @@ stm.MonitorWidth =      0.02724*2560;	% in cm
 
 %% Prepare the Psychtoolbox window
 % Here we call some default settings for setting up Psychtoolbox
-                                                PsychDefaultSetup(2);
+PsychDefaultSetup(2);
 % Define black and white
 white = WhiteIndex(sys.screenNumber);
 black = BlackIndex(sys.screenNumber);     
 gray =  GrayIndex(sys.screenNumber, 0.5);              
-                                                Screen('Preference', 'VisualDebugLevel', 1);
-                                                Screen('Preference', 'SkipSyncTests', 1);
+Screen('Preference', 'VisualDebugLevel', 1);
+Screen('Preference', 'SkipSyncTests', 1);
 % Open an on screen window
 if strcmp(stm.SesOption, 'Cali')
-    [stm.windowPtr, windowRect] =               PsychImaging('OpenWindow', sys.screenNumber, gray);
+    bgcolor = gray;
 else
-    [stm.windowPtr, windowRect] =               PsychImaging('OpenWindow', sys.screenNumber, black);
+    bgcolor = black;
 end
+[stm.windowPtr, windowRect] = PsychImaging('OpenWindow', sys.screenNumber, bgcolor);
 % Query: Get the size of the on screen window
 [stm.MonitorPixelNumX, stm.MonitorPixelNumY] =  Screen('WindowSize', stm.windowPtr);
 % Query: the frame duration
@@ -312,14 +313,15 @@ while stm.Running
     end
 end
 
+Screen('FillRect', stm.Vis.windowPtr, bgcolor);
+Screen('Flip', stm.Vis.windowPtr);
+
 %% Clear the display
 % if sys.SesCycleNumCurrent < sys.SesCycleNumTotal + 1 
 %     % interrupted, but not naturally finished
 %     sys.SesCycleNumCurrent = sys.SesCycleNumTotal;
 %     XinStimEx_Vis_MT_Localizer_Callback;
 % end
-pause(2);
-Screen('CloseAll') 
-close all;
+pause(0.5);
+Screen('CloseAll')
 sca;
-% dos('C:\Windows\System32\DisplaySwitch.exe /clone');

@@ -1,5 +1,8 @@
 %% MT localizer with multiple options
 
+clearvars stm sys
+global stm sys
+
 %% Switch multi-display mode
 if max(Screen('Screens')) ~=2
     opts = struct(  'WindowStyle',  'modal',... 
@@ -15,11 +18,8 @@ else
     
 end
 dos('C:\Windows\System32\DisplaySwitch.exe /extend');
-sca;                    % Clear the screen       
-pause(2);
-% close all;
-clearvars;              % Clear the workspace
-global stm sys
+sca;    
+pause(0.5);
 
 %% Specify Session Parameters
 % locate the screen number
@@ -113,14 +113,17 @@ stm.Vis.MonitorWidth =      0.02724*2560;	% in cm
 white = WhiteIndex(sys.screenNumber);
 black = BlackIndex(sys.screenNumber);   
 gray =  GrayIndex(sys.screenNumber, 0.5);   
-                                                Screen('Preference', 'VisualDebugLevel', 1);
-                                                Screen('Preference', 'SkipSyncTests', 1);
+Screen('Preference', 'VisualDebugLevel', 1);
+Screen('Preference', 'SkipSyncTests', 1);
+
 % Open an on screen window
-if stm.Vis.SesOptionMore 
-    [stm.Vis.windowPtr, windowRect] =           PsychImaging('OpenWindow', sys.screenNumber, gray);
+if stm.Vis.SesOptionMore
+    bgcolor = gray;
 else
-    [stm.Vis.windowPtr, windowRect] =           PsychImaging('OpenWindow', sys.screenNumber, black);
+    bgcolor = black;
 end
+[stm.Vis.windowPtr, windowRect] =           PsychImaging('OpenWindow', sys.screenNumber, bgcolor);
+
 % Query: Get the size of the on screen window
 [stm.Vis.MonitorPixelNumX, stm.Vis.MonitorPixelNumY] = ...
                                                 Screen('WindowSize', stm.Vis.windowPtr);
@@ -406,14 +409,14 @@ while stm.Vis.Running
     end
 end
 
+Screen('FillRect', stm.Vis.windowPtr, bgcolor);
+Screen('Flip', stm.Vis.windowPtr);
+
 %% Clean up
-pause(0.025);
-% sys.NIDAQ.TaskDO.
+pause(0.5);
 sys.NIDAQ.TaskDO.abort();
 sys.NIDAQ.TaskDO.delete;
         try sys.MsgBox.delete();    catch
         end
-Screen('CloseAll') 
-close all;
+Screen('CloseAll')
 sca;
-% dos('C:\Windows\System32\DisplaySwitch.exe /clone');
