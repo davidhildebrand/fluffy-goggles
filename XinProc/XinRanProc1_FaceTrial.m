@@ -32,7 +32,7 @@ else
     A.RunningSource =   'S';
     % Calling from another script
     [A.PathName, A.FileName, FileExt] = fileparts(varargin{1});
-    A.PathName =        [A.PathName, '\'];
+    A.PathName =        [A.PathName, filesep];
     A.FileName =        {[A.FileName, FileExt]};
 end
 
@@ -58,33 +58,35 @@ P.ProcPixelWidth =              A.sysCamPixelWidth/P.ProcPixelBinNum;
 P.ProcFrameRate =               5;
 P.ProcFrameBinNum =             A.sysCamFrameRate/P.ProcFrameRate; 
 
-A.Sys.hWaitbar =                    waitbar(0, 'processing');
+A.Sys.hWaitbar =                waitbar(0, 'processing');
 
-%% Get the Visual Stim infomation in *VisSeqData.mat'
-A.FileList = dir('D:\XINTRINSIC_from_MarmoLord\VisSeqData\');
-A.FolderFileList = dir('D:\XINTRINSIC_from_MarmoLord\VisSeqData\');
+%% Get the stimulus infomation in *_SequenceData.mat'
+A.FileList = dir(A.PathName);
+A.FolderFileList = dir(A.PathName);
 A.VisSeqDataList = struct('name',[], 'folder',[], 'date', [], 'bytes', [], 'isdir', [], 'datenum', []);
 A.VisSeqDataDatenum = [];
 A.VisSeqDataNumTotal = 0;
 for i = 1:length(A.FolderFileList)
     if length(A.FileList(i).name)>15
-        if strcmp(A.FileList(i).name(end-13:end), 'VisSeqData.mat')
-        	A.VisSeqDataNumTotal = A.VisSeqDataNumTotal +1;
+        if ~isempty(strfind(A.FileList(i).name, '_StimulusData.mat'))
+        	A.VisSeqDataNumTotal = A.VisSeqDataNumTotal + 1;
             A.VisSeqDataList(A.VisSeqDataNumTotal,1) = A.FileList(i);
+            tstr = strrep(A.VisSeqDataList(A.VisSeqDataNumTotal,1).name(1:15), 'd', 'T');
             A.VisSeqDataDatenum(A.VisSeqDataNumTotal,1) = ...
-                datenum(A.VisSeqDataList(A.VisSeqDataNumTotal,1).name(1:15), 'yyyymmddTHHMMSS');
+                datenum(tstr, 'yyyymmddTHHMMSS');
         end
     end
 end
-for i = 1: length(A.FileName)
-    A.FileDatenum(i) = datenum(A.FileName{i}(1:13), 'yymmddTHHMMSS');
+for i = 1:length(A.FileName)
+    tstr = strrep(A.FileName{i}(1:15), 'd', 'T');
+    A.FileDatenum(i) = datenum(tstr, 'yyyymmddTHHMMSS');
     aa = 24*60*60*(A.VisSeqDataDatenum - A.FileDatenum(i));
     A.FileNum4VisSeqData(i,1) = find(aa>0, 1);
 	A.FileLag4VisSeqData(i,1) = min(aa(aa>0));
 end            
-figure;
-plot(A.FileLag4VisSeqData);
-drawnow;
+%figure;
+%plot(A.FileLag4VisSeqData);
+%drawnow;
 % return
 
 %% DATA BINNING
@@ -92,12 +94,12 @@ for i = 1: length(A.FileName)
    
     %% Load 'S'
     A.curfilename = [A.PathName, A.FileName{i}];
-    S = load([A.curfilename(1:end-3) 'mat']);  
+    S = load([A.curfilename(1:end-3) 'mat']);
     S = S.S;
     disp([  'Processing: "', A.FileName{i}, ...
             '" with the sound: "', S.SesSoundFile, '"']);
     %% Load 'stm'
-    stm = load([  A.VisSeqDataList(A.FileNum4VisSeqData(i)).folder, '\',...
+    stm = load([  A.VisSeqDataList(A.FileNum4VisSeqData(i)).folder, filesep,...
             A.VisSeqDataList(A.FileNum4VisSeqData(i)).name]);
     stm = stm.stm;
     %% Replace compoents in 'S' with 'stm'
@@ -124,7 +126,8 @@ for i = 1: length(A.FileName)
         disp('stm and S matching error');
         return
     end
-    save([A.curfilename(1:end-4), '_VisSeq.mat'], 'S', '-v7.3');   
+    [fp,fn,~] = fileparts(A.curfilename);
+    save(fullfile(fp,[fn,'_StimulusInformation.mat']), 'S', '-v7.3');   
     
     %% Parameter initialization for Spatial & Temporal Binning  
     A.SesTrlNumTotal =          length(S.SesTrlOrderVec);
@@ -206,9 +209,10 @@ for i = 1: length(A.FileName)
     ylabel(A.hAx(1),        'Power Mean (volt)');
     ylabel(A.hAx(2),        'Pixel Mean (ADU)');
     
-    save([A.curfilename(1:end-4),...
-        sprintf('_%dx%d@%dfps', P.ProcPixelHeight, P.ProcPixelWidth, P.ProcFrameRate),...
-        '_VisSeq_P1.mat'], 'P', '-v7.3');     
+    [fp,fn,~] = fileparts(A.curfilename);
+    save(fullfile(fp,[fn, '_Processed_', ...
+        sprintf('%dx%d@%dfps', P.ProcPixelHeight, P.ProcPixelWidth, P.ProcFrameRate),...
+        '.mat']), 'P', '-v7.3');
     fclose(A.curfid);
 end
 

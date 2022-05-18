@@ -57,7 +57,7 @@ if nargin ==0           % Calling from direct running of the function
 else                    % Calling from another script
     Tm.RunningSource =   'S';
     [Tm.PathName, Tm.FileName, FileExt] = fileparts(varargin{1});
-    Tm.PathName =        [Tm.PathName, '\'];
+    Tm.PathName =        [Tm.PathName, filesep];
     Tm.FileName =        {[Tm.FileName, FileExt]};
 end
 disp(['Xintrinsic Processing Stage 1 (spatiotemporal binning) is about to start on ' ...

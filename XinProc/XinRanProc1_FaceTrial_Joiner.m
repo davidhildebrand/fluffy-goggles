@@ -3,14 +3,13 @@ function XinRanProc1_FaceTrial_Joiner(varargin)
 % DATA BINNING
 
 clear global
-global A P S stm
+global A P S
+
 %% Get preprocessed ('*.rec') file
 [~, A.Sys.pcname] = system('hostname');
 if strcmp(A.Sys.pcname(1:end-1), 'Intrinsic')
-    % if current computer is the recording computer 
         A.Sys.folder = 'D:\XINTRINSIC\';    
 else
-    % if current computer is NOT a recording computer
         A.Sys.folder = 'D:\XINTRINSIC\';     
 end
 
@@ -18,8 +17,8 @@ if nargin ==0
     % Calling from direct running of the function
     A.RunningSource =   'D';
     [A.FileName, A.PathName, A.FilterIndex] = uigetfile(...
-        [A.Sys.folder '*VisSeq_P1.mat'],...
-        'Select raw recording files to process',...
+        [A.Sys.folder '*_Processed*.mat'],...
+        'Select processed recording files to join',...
         'MultiSelect',              'On');
     if A.FilterIndex == 0
         clear A;                    % nothing selected
@@ -32,20 +31,22 @@ else
     A.RunningSource =   'S';
     % Calling from another script
     [A.PathName, A.FileName, FileExt] = fileparts(varargin{1});
-    A.PathName =        [A.PathName, '\'];
+    A.PathName =        [A.PathName, filesep];
     A.FileName =        {[A.FileName, FileExt]};
 end
 
 disp(['Xintrinsic Processing Stage 1 (spatiotemporal binning) is about to start on ' ...
     num2str(length(A.FileName)) ' files']);
 
-%% DATA BINNING
-for i = 1: length(A.FileName)
+%% DATA JOINING
+for i = 1:length(A.FileName)
    
     %% Load 'S'
     A.curfilename = [A.PathName, A.FileName{i}];
-    S = load([A.PathName, A.FileName{i}(1:36) '_VisSeq.mat']);  
-    P = load( A.curfilename);
+    [fp,fn,fe] = fileparts(A.curfilename);
+    ofn = regexprep(fn,'_Processed_.*','');
+    S = load(fullfile(fp, [ofn, '_StimulusInformation', fe]));  
+    P = load(A.curfilename);
     S = S.S;
     P = P.P;
     if i==1
@@ -69,9 +70,12 @@ for i = 1: length(A.FileName)
 end
     P = Pall;
     S = Sall;
-    A.combinedname = [A.PathName, datestr(now, 'yymmddTHHMMSS')];
-    save([A.combinedname, A.FileName{1}(14:end-7), 'All', A.FileName{1}(end-6:end)], 'P', '-v7.3');  
-    save([A.combinedname, A.FileName{1}(14:36), '.mat'], 'S', '-v7.3');   
+    nowthen = now;
+    [~,fn,~] = fileparts(A.FileName{1});
+    extrastr = regexprep(fn,'.*_','');
+    A.combinedname = [A.PathName, datestr(nowthen, 'yyyymmdd') 'd' datestr(nowthen, 'HHMMSS'), 't_Recording_JoinedCollection_' extrastr];
+    save(A.combinedname, 'P', 'S', '-v7.3');  
+    %save([A.combinedname, A.FileName{1}(14:36), '.mat'], 'S', '-v7.3');   
 
 disp('All files are processed');
 return;

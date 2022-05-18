@@ -4,15 +4,13 @@ clear global
 global A R Pcurses
 %% Get preprocessed ('*VisSeq_P1.mat') file
 [~, A.Sys.pcname] = system('hostname');
-% if strcmp(A.Sys.pcname(1:end-1), 'FANTASIA-425')
-%     % if current computer is the recording computer 
-%         A.Sys.folder = 'D:\=XINTRINSIC=\';    
-% else
-%     % if current computer is NOT a recording computer
-%         A.Sys.folder = 'X:\';       
-% end
-
-A.Sys.folder = 'D:\XINTRINSIC\';
+if strcmp(A.Sys.pcname(1:end-1), 'Intrinsic')
+    % if current computer is the recording computer 
+        A.Sys.folder = 'D:\XINTRINSIC\';    
+else
+    % if current computer is NOT a recording computer
+        A.Sys.folder = 'D:\XINTRINSIC\';      
+end
 
 if nargin ==0
     % Calling from direct running of the function
@@ -32,7 +30,7 @@ else
     A.RunningSource =   'S';
     % Calling from another script
     [A.PathName, A.FileName, FileExt] = fileparts(varargin{1});
-    A.PathName =        [A.PathName, '\'];
+    A.PathName =        [A.PathName, filesep];
     A.FileName =        {[A.FileName, FileExt]};
 end
 
