@@ -16,17 +16,27 @@ if max(Screen('Screens')) ~=3
 else
     
 end
-Screen('Close');
+
+%% Switch multi-display mode
+Screen('Close') 
+if max(Screen('Screens')) ~= 2
+    opts = struct(  'WindowStyle',  'modal',... 
+                    'Interpreter',  'tex');
+    errordlg(...
+        [   '\fontsize{20} The monitors are not in all extended mode \newline ',...
+            'Close thecurrent Matlab \newline',...
+            'Extend all screens in windows \newline' ,...
+            'And restart Matlab'],...
+        '', opts)
+    return
+end
 dos('C:\Windows\System32\DisplaySwitch.exe /extend');
-sca;                    % Clear the screen       
-pause(2);
-% close all;
-clearvars;              % Clear the workspace
-global stm sys
+sca;       
+pause(0.5);
 
 %% 
-    stm.SesCycleTime =              18;     % in second %SOC.
-    sys.SesCycleNumTotal =          11;     % rep # total
+stm.SesCycleTime =              18;     % in second %SOC.
+sys.SesCycleNumTotal =          11;     % rep # total
 
 %% Specify Session Parameters
 % locate the screen number
