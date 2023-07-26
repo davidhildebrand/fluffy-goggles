@@ -3,7 +3,7 @@ function XinRanAnalysis2_Sweep(varargin)
 %   S.TrlNumTotal is supposed to be 1
 %   Stimulation is supposed to vary a feature continuously in a cycle
 % clearvars;
-global A T
+global A T 
 clear A T
 global A T
 
@@ -44,7 +44,7 @@ else
     A.RunningSource =   'S';
     % Calling from another script
     [A.PathName, A.FileName, FileExt] = fileparts(varargin{1});
-    A.PathName =        [A.PathName, '\'];
+    A.PathName =        [A.PathName, filesep];
     A.FileName =        {[A.FileName, FileExt]};
 end
 %% Load data files
@@ -67,21 +67,31 @@ if A.RunningSource == 'D'
     end
 end
 A.PseudoDelay =	3.6;
-switch [A.FileNameSplits{2}(1:3) '_' A.FileNameSplits{4}(1:4) '_'  A.FileNameSplits{5}(1:3)]
-    case 'NIR_Ring_PBS';    A.Polarity =    -1;     A.PseudoDelay =	A.PseudoDelay;
-    case 'NIR_Pola_PBS';    A.Polarity =    -1;     A.PseudoDelay =	A.PseudoDelay;
-    case 'Far_Pola_PBS';    A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
-    case 'FRe_Pola_PBS';    A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
-    case 'Red_Pola_PBS';    A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
-    case 'Yel_Pola_PBS';    A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
-    case 'Amb_Pola_PBS';    A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
-    case 'Gre_Pola_PBS';    A.Polarity =    -1;     A.PseudoDelay =	A.PseudoDelay;
-    case 'Blu_Pola_PBS';    A.Polarity =    -1;     A.PseudoDelay =	A.PseudoDelay;
-    case 'Blu_Fluo_GFP';    A.Polarity =     1;     A.PseudoDelay = 0.0;
-    otherwise;              A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
-end
+% switch [A.FileNameSplits{2}(1:3) '_' A.FileNameSplits{4}(1:4) '_'  A.FileNameSplits{5}(1:3)]
+%     case 'NIR_Ring_PBS';    A.Polarity =    -1;     A.PseudoDelay =	A.PseudoDelay;
+%     case 'NIR_Pola_PBS';    A.Polarity =    -1;     A.PseudoDelay =	A.PseudoDelay;
+%     case 'Far_Pola_PBS';    A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
+%     case 'FRe_Pola_PBS';    A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
+%     case 'Red_Pola_PBS';    A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
+%     case 'Yel_Pola_PBS';    A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
+%     case 'Amb_Pola_PBS';    A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
+%     case 'Gre_Pola_PBS';    A.Polarity =    -1;     A.PseudoDelay =	A.PseudoDelay;
+%     case 'Blu_Pola_PBS';    A.Polarity =    -1;     A.PseudoDelay =	A.PseudoDelay;
+%     case 'Blu_Fluo_GFP';    A.Polarity =     1;     A.PseudoDelay = 0.0;
+%     otherwise;              A.Polarity =     1;     A.PseudoDelay =	A.PseudoDelay;
+% end
 
-% A.PseudoDelay =	0; A.Polarity =     1; 
+% % if S.SysLightSource contains(A.FileName{1}, 'Green')
+% %     A.Polarity = -1;
+% % else
+% %     disp('ERROR: only processing green stuff')
+% %     return
+% % end
+
+switch S.SysLightSource
+    case 'Green'; A.Polarity = -1;
+    otherwise; disp('WARNING: unknown SysLightSource, setting Polarity to -1'); A.Polarity = -1;
+end
 
 A.DispPixelWidth0 =     120;
 A.DispPixelHeight0 =	75;
