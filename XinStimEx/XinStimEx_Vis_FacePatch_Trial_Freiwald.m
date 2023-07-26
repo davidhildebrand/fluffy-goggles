@@ -3,6 +3,9 @@ function XinStimEx_Vis_FacePatch_Trial_Freiwald
 clearvars stm sys
 global stm sys
 
+ScanImagePath = 'E:\FreiwaldSync\MarmoScope\ScanImage\SI-Basic_2021.1.0_(2021-12-22)_2af5d7cfec';
+addpath(genpath(ScanImagePath))
+
 sys.TempStimFile = ['D:\XINTRINSIC\', 'TempStimData.mat'];
 if isfile(sys.TempStimFile)
     load(sys.TempStimFile, 'ExpDataDir', 'StimDir', 'CycleNum', 'CycleDur');
@@ -13,7 +16,7 @@ if isfile(sys.TempStimFile)
     clear ExpDataDir StimDir CycleNum CycleDur;
 else
     stm.DataDir = 'D:\XINTRINSIC\';
-    stm.StimDir = 'C:\FreiwaldSync\XINTRINSIC\Stimuli\';
+    stm.StimDir = 'E:\FreiwaldSync\XINTRINSIC\Stimuli\';
 end
 
 %% Switch multi-display mode
@@ -49,7 +52,7 @@ for i = 1: max(Screen('Screens'))
 end
 
 stm.SR =                    100e3;
-stm.SesDurTotal =           stm.CycleNum * stm.CycleDur; %8*20.0; % CycleNum * CycleTime                                       
+stm.SesDurTotal =           stm.CycleNum * stm.CycleDur;                                
 stm.Vis.PicSource =         '\Last\shifthalf';
 stm.Vis.PicBackground =     'gray';
 stm.Vis.PicDur =            0.5;
@@ -108,7 +111,7 @@ black = BlackIndex(sys.screenNumber);
 gray =  GrayIndex(sys.screenNumber, 0.5);
 Screen('Preference', 'VisualDebugLevel', 1);
 Screen('Preference', 'SkipSyncTests', 1);
-% Open an on screen window
+
 switch stm.Vis.PicBackground
     case 'white'
         bgcolor = white;
@@ -227,9 +230,9 @@ sys.NIDAQ.TaskCO.registerSignalEvent(...
     @XinStimEx_Vis_FacePatch_Trial_Callback, 'DAQmx_Val_CounterOutputEvent');
 sys.NIDAQ.TaskCO.start()
 stm.Vis.Running = 1;     
-    opts = struct(  'WindowStyle',  'non-modal',... 
-                    'Interpreter',  'tex');
-sys.MsgBox =	msgbox('\fontsize{20} Click to terminate the session after current visual cycle','', opts);
+opts = struct('WindowStyle',  'non-modal',...
+    'Interpreter',  'tex');
+sys.MsgBox = msgbox('\fontsize{20} Click to terminate the session after current visual cycle','', opts);
 
 %% Play 
 while stm.Vis.Running
