@@ -11,12 +11,12 @@ if toc(stm.Vis.CtrlTrlDurCurrentTimer) > 0.1
     % This "if" is necessary for 'NI-DAQ' to require
     % at least 0.1s between real rising-edge triggering events to avoid 
     % pseudo-triggering by the falling-edge events
-    stm.Vis.CtrlTrlNumCurrent =   stm.Vis.CtrlTrlNumCurrent + 1;
-    stm.Vis.CtrlTrlDurCurrentTimer =  tic;
+    stm.Vis.CtrlTrlNumCurrent = stm.Vis.CtrlTrlNumCurrent + 1;
+    stm.Vis.CtrlTrlDurCurrentTimer = tic;
     tt = datestr(now, 'HH:MM:SS.FFF');
     try
-        disp([sprintf('trial: #%d type ''%s'' ', stm.Vis.CtrlTrlNumCurrent,...
-            stm.Vis.TrlNames{stm.Vis.SesTrlOrderVec(stm.Vis.CtrlTrlNumCurrent)}),...
+        disp([sprintf('trial: #%d type ''%s'' ', stm.Vis.CtrlTrlNumCurrent, ...
+            stm.Vis.TrlNames{stm.Vis.SesTrlOrderVec(stm.Vis.CtrlTrlNumCurrent)}), ...
             tt]);
     end
 %     if strcmp(stm.Vis.SesOption, 'Cali')
