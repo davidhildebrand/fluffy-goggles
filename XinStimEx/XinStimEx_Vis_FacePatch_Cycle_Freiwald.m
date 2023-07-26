@@ -2,6 +2,9 @@
 clearvars stm sys
 global stm sys
 
+ScanImagePath = 'E:\FreiwaldSync\MarmoScope\ScanImage\SI-Basic_2021.1.0_(2021-12-22)_2af5d7cfec'
+addpath(genpath(ScanImagePath))
+
 sys.TempStimFile = ['D:\XINTRINSIC\', 'TempStimData.mat'];
 if isfile(sys.TempStimFile)
     load(sys.TempStimFile, 'ExpDataDir', 'StimDir', 'CycleNum', 'CycleDur');
@@ -12,7 +15,7 @@ if isfile(sys.TempStimFile)
     clear ExpDataDir StimDir CycleNum CycleDur;
 else
     stm.DataDir = 'D:\XINTRINSIC\TESTING_20220402d\';
-    stm.StimDir = 'C:\FreiwaldSync\XINTRINSIC\Stimuli\';
+    stm.StimDir = 'E:\FreiwaldSync\XINTRINSIC\Stimuli\';
 end
 
 
