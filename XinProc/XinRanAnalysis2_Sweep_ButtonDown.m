@@ -276,7 +276,7 @@ if TuneUpdt
     
     cQRepNum =          getappdata(hFig,	'cQRepNum');
     DateTime =          getappdata(hFig,    'DateTime');
-    imwrite(PhPwThree_TuneMap,strcat('C:\Users\Freiwald\Desktop\CurrentFigure\',DateTime,'_', num2str(cQRepNum-1),'cycles.png'));
+    %imwrite(PhPwThree_TuneMap,strcat('C:\Users\Freiwald\Desktop\CurrentFigure\',DateTime,'_', num2str(cQRepNum-1),'cycles.png'));
              
     set(hImageTune,    'CData',        PhPwThree_TuneMap);
         if strcmp(ButtonTag, 'TuneScalebarHue')
