@@ -270,7 +270,10 @@ end
 Screen('FillRect', stm.Vis.windowPtr, bgcolor);
 Screen('Flip', stm.Vis.windowPtr);
 
+
+disp('Saving StimulusData file.')
 save([stm.DataDir, filesep, stm.Vis.SesTimeStr, '_Stimulus_', stm.Vis.Name, '_StimulusData.mat'], 'stm', '-v7.3');
+disp('Saved StimulusData file.')
 
 %% Clean up
 pause(0.5);
