@@ -7,7 +7,7 @@ global S P Tm Sys
 % Sys:  System parameters, if not in "S" yet
 P = [];     Tm = [];     Sys = []; 
 
-gaussian_filter = 0;
+gaussian_filter = false;
 
 % P.RecCanvasHeight =     300;
 % P.RecCanvasWidth =      480;
@@ -16,14 +16,14 @@ gaussian_filter = 0;
     Tm.SysDeft.SysCamBinNumber =	4;
     Tm.SysDeft.SysCamPixelHeight =	300;
     Tm.SysDeft.SysCamPixelWidth =	480;
-        Tm.SysDeft.ProcPixelBinNum =	4;
-        Tm.SysDeft.ProcFrameRate =      5;
+    Tm.SysDeft.ProcPixelBinNum =	1;
+    Tm.SysDeft.ProcFrameRate =      5;
 % System: FLIR/PointGrey GS3 
     Tm.SysFlir.SysCamFrameRate =	80;
     Tm.SysFlir.SysCamBinNumber =	4;
     Tm.SysFlir.SysCamPixelHeight =	300;
     Tm.SysFlir.SysCamPixelWidth =	480;
-        Tm.SysFlir.ProcPixelBinNum =	4; % or 2?
+        Tm.SysFlir.ProcPixelBinNum =	1; % or 2?
         Tm.SysFlir.ProcFrameRate =      5;
 %       Tm.SysFlir.ProcPixelBinNum =	1;
 % System: Thorlabs sCMOS
@@ -157,17 +157,17 @@ for i = 1: length(Tm.FileName)
             
             %% Gaussian filter
             if gaussian_filter == 1
-                T.DataRawTemp = reshape(T.DataRaw,...
+                Tm.DataRawTemp = reshape(Tm.DataRaw,...
                     P.ProcPixelBinNum * P.ProcCamPixelHeight,...
                     P.ProcPixelBinNum * P.ProcCamPixelWidth,...
                     P.ProcFrameBinNum * P.ProcFramePerTrial);
-                for f = 1:size(T.DataRawTemp,3)
-                    A = uint16(T.DataRawTemp(:,:,f)); 
-                    T.DataRawTemp(:,:,f) = double(imgaussfilt(A,3));
+                for f = 1:size(Tm.DataRawTemp,3)
+                    A = uint16(Tm.DataRawTemp(:,:,f));
+                    Tm.DataRawTemp(:,:,f) = double(imgaussfilt(A,3));
                 end
-                T.DataRaw = reshape(T.DataRawTemp,...
-                                    R.SysCamPixelHeight * R.SysCamPixelWidth, ...
-                                    R.SysCamFramePerTrial );
+                Tm.DataRaw = reshape(Tm.DataRawTemp,...
+                                    Sys.SysCamPixelHeight * Sys.SysCamPixelWidth, ...
+                                    Sys.SysCamFramePerTrial );
             end
 
             %% Frame #, Trial order # location        
