@@ -61,10 +61,10 @@ saving = true;
 % save_path = 'D:\XINTRINSIC\Curly_20231016d\results';
 
 monkey = 'Coconut';
-% load('D:\XINTRINSIC\Coconut_20240112d\images_pxBin1_frBin5_gaussFalse\20240112d191105t_Recording_JoinedCollection_300x480@5fps.mat')
-% save_path = 'D:\XINTRINSIC\Coconut_20240112d\results';
-load('D:\XINTRINSIC\Coconut_20240205d_org\images_pxBin1_frBin5_gaussFalse\20240205d172049t_Recording_JoinedCollection_300x480@5fps.mat')
-save_path = 'D:\XINTRINSIC\Coconut_20240205d_org\results';
+load('D:\XINTRINSIC\Coconut_20240112d_proc\images_pxBin1_frBin5_gaussFalse\20240112d191105t_Recording_JoinedCollection_300x480@5fps.mat')
+save_path = 'D:\XINTRINSIC\Coconut_20240112d\results';
+% load('D:\XINTRINSIC\Coconut_20240205d_org\images_pxBin1_frBin5_gaussFalse\20240205d172049t_Recording_JoinedCollection_300x480@5fps.mat')
+% save_path = 'D:\XINTRINSIC\Coconut_20240205d_org\results';
 % load('D:\XINTRINSIC\Coconut_20240207d_org\images_pxBin1_frBin5_gaussFalse\20240207d153353t_Recording_JoinedCollection_300x480@5fps.mat')
 % save_path = 'D:\XINTRINSIC\Coconut_20240207d_org\results';
 
@@ -795,40 +795,23 @@ end
 
 
 
-figure(104);
-bgim = gray2rgb(double(R.windowavg/max(R.windowavg(:))));
-% bgim = gray2rgb(R.windowavg*0.000002);
-fgim = zeros(size(bgim));
-AmpMeanThresh = max(D.R.AmpMeanDiff(:)) - 0.65*(max(D.R.AmpMeanDiff(:)) - min(D.R.AmpMeanDiff(:)));
-% AmpMeanDifftmp = D.R.AmpMeanDiff(D.R.AmpMeanDiff >= AmpMeanThresh);
-%AmpMeanObjThresh = max(D.R.AmpMeanDiffObjs(:)) - 0.40*(max(D.R.AmpMeanDiffObjs(:)) - min(D.R.AmpMeanDiffObjs(:)));
-fgim(:,:,2) = D.R.AmpMeanDiff >= AmpMeanThresh;
-% fgim(:,:,2) = D.R.AmpMeanDiffObjs >= AmpMeanObjThresh;
-DotAvgThresh = max(average_map(:)) - 0.55*(max(average_map(:)) - min(average_map(:)));
-fgim(:,:,3) = average_map >= DotAvgThresh;
-% fgim(:,:,3) = D.R.AmpMeanDiff/max(D.R.AmpMeanDiff(:));
-% fgim(:,:,3) = squeeze(D.R.AmpMeanDiff)*800;
-% fused_average_and_FacesVsAll = imfuse(R.windowavg*0.000002,squeeze(D.R.AmpMeanDiff_tmp)*800,'falsecolor','Scaling','none','ColorChannels',[1 2 0]);
-% blended = imblend(squeeze(D.R.AmpMeanDiff_tmp)*800, bgim, 0.5, 'normal');
-blended = imblend(0.6*fgim, 1.5*bgim, 0.6, 'normal');
-%f1h1 = imagesc(fused_average_and_FacesVsAll); 
-f1h1 = imshow(blended);
-axis equal; axis off;
-title('blended FacesVsMaxAll (b) and DotsMovVsNotResp (g)');
-
-f2h = imagesc(squeeze(D.R.AmpMeanDiff), [-0.0,0.015]);
-axis equal; colorbar; axis off;
-title('response difference F against max of all others');
-% if saving
-%     datestrf = [datestr(now,'yyyymmdd') 'd' datestr(now,'HHMMSS') 't'];
-%     imwrite((D.R.AmpMeanDiff / max(D.R.AmpMeanDiff(:))),...
-%         [save_path filesep datestrf '_' monkey '_AmpMeanDiff_' cycle_num 'reps.png'])
-%     saveas(f2h,[save_path filesep datestrf '_' monkey '_AmpMeanDiff_' cycle_num 'reps_FigSaveAs.png'])
-% end
-
-figure;
-f2h = imagesc(squeeze(D.R.AmpMeanDiffObjs), [-0.01,0.015]);
-axis equal; colorbar; axis off;
-title('response difference F against max of objects only');
-
-
+% figure(104);
+% bgim = gray2rgb(double(R.windowavg/max(R.windowavg(:))));
+% % bgim = gray2rgb(R.windowavg*0.000002);
+% fgim = zeros(size(bgim));
+% AmpMeanThresh = max(D.R.AmpMeanDiff(:)) - 0.65*(max(D.R.AmpMeanDiff(:)) - min(D.R.AmpMeanDiff(:)));
+% % AmpMeanDifftmp = D.R.AmpMeanDiff(D.R.AmpMeanDiff >= AmpMeanThresh);
+% %AmpMeanObjThresh = max(D.R.AmpMeanDiffObjs(:)) - 0.40*(max(D.R.AmpMeanDiffObjs(:)) - min(D.R.AmpMeanDiffObjs(:)));
+% fgim(:,:,2) = D.R.AmpMeanDiff >= AmpMeanThresh;
+% % fgim(:,:,2) = D.R.AmpMeanDiffObjs >= AmpMeanObjThresh;
+% DotAvgThresh = max(average_map(:)) - 0.55*(max(average_map(:)) - min(average_map(:)));
+% fgim(:,:,3) = average_map >= DotAvgThresh;
+% % fgim(:,:,3) = D.R.AmpMeanDiff/max(D.R.AmpMeanDiff(:));
+% % fgim(:,:,3) = squeeze(D.R.AmpMeanDiff)*800;
+% % fused_average_and_FacesVsAll = imfuse(R.windowavg*0.000002,squeeze(D.R.AmpMeanDiff_tmp)*800,'falsecolor','Scaling','none','ColorChannels',[1 2 0]);
+% % blended = imblend(squeeze(D.R.AmpMeanDiff_tmp)*800, bgim, 0.5, 'normal');
+% blended = imblend(0.6*fgim, 1.5*bgim, 0.6, 'normal');
+% %f1h1 = imagesc(fused_average_and_FacesVsAll); 
+% f1h1 = imshow(blended);
+% axis equal; axis off;
+% title('blended FacesVsMaxAll (b) and DotsMovVsNotResp (g)');
