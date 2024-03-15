@@ -52,7 +52,8 @@ global P S
 A.FullFileName =    [A.PathName, A.FileName{1}];   
 A.FileNameSplits =	strsplit(A.FileName{1}, '_');
 A.FileNameS =       strjoin(A.FileNameSplits(1:5), '_');
-load([A.PathName A.FileNameS '.mat'], 'S');	% load S (Saved from recording)
+
+load([A.PathName A.FileNameS '_PBS'], 'S');	% load S (Saved from recording)
 load([A.FullFileName(1:end-4) '.mat'], 'P');	% load P (Preprocessed)  
 A.SoundFileName =   S.SesSoundFile;
 A.SoundWave =       S.SesSoundWave;
