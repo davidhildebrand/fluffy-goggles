@@ -2,27 +2,23 @@
 
 saving = true;
 
-% monkey = 'Dali';
-% load('D:\XINTRINSIC\Dali_20230505d_proc\20230505d134732t_Recording_JoinedCollection_300x480@5fps.mat')
-% save_path = 'D:\XINTRINSIC\Dali_20230505d_proc';
-
-% monkey = 'Crumpet';
-% load('D:\XINTRINSIC\Crumpet_20230129d\20230129d231636t_Recording_JoinedCollection_300x480@5fps.mat')
-% save_path = 'D:\XINTRINSIC\Crumpet_20230129d';
-
-% monkey = 'Crumpet';
-% load('D:\XINTRINSIC\Crumpet_20230127d\20230127d180107t_Recording_JoinedCollection_300x480@5fps.mat')
-% save_path = 'D:\XINTRINSIC\Crumpet_20230127d';
-
 % monkey = 'Cadbury';
 % load('D:\XINTRINSIC\Cadbury_20220405d\20220406d004446t_Recording_JoinedCollection_300x480@5fps_24repeats.mat');
 % save_path = 'D:\XINTRINSIC\Cadbury_20220405d';
 % load('D:\XINTRINSIC\Cadbury_20220405d_LessBin\20230126d195611t_Recording_JoinedCollection_300x480@10fps_24repeats.mat');
 % save_path = 'D:\XINTRINSIC\Cadbury_20220405d_LessBin';
 
-monkey = 'Cashew';
-load('D:\XINTRINSIC\Cashew_combined\20220406d093729t_Recording_JoinedCollection_300x480@5fps_18repeats.mat')
-save_path = 'D:\XINTRINSIC\Cashew_combined_proc';
+% monkey = 'Crumpet';
+% load('D:\XINTRINSIC\Crumpet_20230129d\20230129d231636t_Recording_JoinedCollection_300x480@5fps.mat')
+% save_path = 'D:\XINTRINSIC\Crumpet_20230129d';
+
+% monkey = 'Crumpet';
+% load('D:\XINTRINSIC\Crumpet_20230828d_Intrinsic\20230828d170205t_Recording_JoinedCollection_300x480@5fps.mat')
+% save_path = 'D:\XINTRINSIC\Crumpet_20230828d';
+
+% monkey = 'Dali';
+% load('D:\XINTRINSIC\Dali_20230505d_proc\20230505d134732t_Recording_JoinedCollection_300x480@5fps.mat')
+% save_path = 'D:\XINTRINSIC\Dali_20230505d_proc';
 
 % monkey = 'Dali';
 % load('D:\XINTRINSIC\Dali_20220523d\20220523d132338t_Recording_JoinedCollection_300x480@5fps.mat')
@@ -31,6 +27,47 @@ save_path = 'D:\XINTRINSIC\Cashew_combined_proc';
 % monkey = 'Hershey';
 %load('D:\XINTRINSIC\Hershey_20220405d\20220406d003223t_Recording_JoinedCollection_300x480@5fps_14repeats.mat')
 % save_path = 'D:\XINTRINSIC\Hershey_20220405d';
+
+% monkey = 'Larry';
+% load('D:\XINTRINSIC\20230812d120014t_Recording_JoinedCollection_300x480@5fps.mat')
+% save_path = 'D:\XINTRINSIC\Larry_combined_proc';
+
+% monkey = 'Larry';
+% load('D:\XINTRINSIC\Larry_20230911d_org\images\20230912d081854t_Recording_JoinedCollection_300x480@5fps.mat')
+% save_path = 'D:\XINTRINSIC\Larry_20230911d_org\images\results';
+
+% monkey = 'Larry';
+% load('D:\XINTRINSIC\Larry_20230911d_org\images_dup\setA\20230912d201726t_Recording_JoinedCollection_300x480@5fps')
+% save_path = 'D:\XINTRINSIC\Larry_20230911d_org\images_dup\setA\results';
+
+% monkey = 'Larry';
+% load('D:\XINTRINSIC\Larry_20230911d_org\images_dup\setB\20230912d202539t_Recording_JoinedCollection_300x480@5fps')
+% save_path = 'D:\XINTRINSIC\Larry_20230911d_org\images_dup\setB\results';
+
+% monkey = 'Larry';
+% load('D:\XINTRINSIC\Larry_20230913d_org\images\20230913d215830t_Recording_JoinedCollection_300x480@5fps.mat')
+% save_path = 'D:\XINTRINSIC\Larry_20230913d_org\images\results';
+
+% monkey = 'Larry';
+% load('D:\XINTRINSIC\Larry_20231011d_PDproctest\20231011d172353t_Recording_JoinedCollection_300x480@5fps')
+% save_path = 'D:\XINTRINSIC\Larry_20231011d_PDproctest\results';
+
+% monkey = 'Curly';
+% load('D:\XINTRINSIC\Curly_20231004d_Intrinsic\20231004d151631t_Recording_JoinedCollection_300x480@5fps')
+% save_path = 'D:\XINTRINSIC\Curly_20231004d\results';
+
+% monkey = 'Curly';
+% load('D:\XINTRINSIC\Curly_20231016d\20231016d215420t_Recording_JoinedCollection_300x480@5fps')
+% save_path = 'D:\XINTRINSIC\Curly_20231016d\results';
+
+monkey = 'Coconut';
+% load('D:\XINTRINSIC\Coconut_20240112d\images_pxBin1_frBin5_gaussFalse\20240112d191105t_Recording_JoinedCollection_300x480@5fps.mat')
+% save_path = 'D:\XINTRINSIC\Coconut_20240112d\results';
+load('D:\XINTRINSIC\Coconut_20240205d_org\images_pxBin1_frBin5_gaussFalse\20240205d172049t_Recording_JoinedCollection_300x480@5fps.mat')
+save_path = 'D:\XINTRINSIC\Coconut_20240205d_org\results';
+% load('D:\XINTRINSIC\Coconut_20240207d_org\images_pxBin1_frBin5_gaussFalse\20240207d153353t_Recording_JoinedCollection_300x480@5fps.mat')
+% save_path = 'D:\XINTRINSIC\Coconut_20240207d_org\results';
+
 
 %%
 if saving
@@ -183,7 +220,7 @@ D.R.AmpMeanDiffS = D.R.AmpMeanS - D.R.AmpMeanMaxNonS;
 
 %% plot response/amplitude difference maps
 figure;
-f2h = imagesc(squeeze(D.R.AmpMeanDiff), [-0.02,0.012]);
+f2h = imagesc(squeeze(D.R.AmpMeanDiff), [-0.000,0.007]);
 axis equal; colorbar; axis off;
 title('response difference F against max of all others');
 if saving
@@ -194,7 +231,7 @@ if saving
 end
 
 figure;
-f2h = imagesc(squeeze(D.R.AmpMeanDiffObjs), [-0.02,0.01]);
+f2h = imagesc(squeeze(D.R.AmpMeanDiffObjs), [-0.00,0.015]);
 axis equal; colorbar; axis off;
 title('response difference F against max of objects only');
 if saving
@@ -220,7 +257,7 @@ end
 D.R.TvalueFvsBAVOUPS = (D.R.MeanF - D.R.MeanBAVOUPS) ./ sqrt(D.R.StdF.^2 / D.R.NumC + D.R.StdBAVOUPS.^2 / (D.R.NumC * 7));
 figure;
 % can also try plotting something like (D.R.TvalueFvsBAVOUPS>=1.5)
-fh = imagesc(squeeze(D.R.TvalueFvsBAVOUPS));%,[-2,4]);
+fh = imagesc(squeeze(D.R.TvalueFvsBAVOUPS),[0,3]);
 axis equal; colorbar; axis off;
 title('T contrast FvsBAVOUPS');
 if saving
@@ -234,7 +271,7 @@ end
 
 D.R.TvalueFvsBAVOU = (D.R.MeanF - D.R.MeanBAVOU) ./ sqrt(D.R.StdF.^2 / D.R.NumC + D.R.StdBAVOU.^2 / (D.R.NumC * 5));
 figure;
-fh = imagesc(squeeze(D.R.TvalueFvsBAVOU));%,[-2,2]);
+fh = imagesc(squeeze(D.R.TvalueFvsBAVOU),[-1,2]);
 axis equal; colorbar; axis off;
 title('T contrast FvsBAVOU');
 if saving
@@ -248,7 +285,7 @@ end
 
 D.R.TvalueFvsOU = (D.R.MeanF - D.R.MeanOU) ./ sqrt(D.R.StdF.^2 / D.R.NumC + D.R.StdOU.^2 / (D.R.NumC * 2));
 figure;
-fh = imagesc(squeeze(D.R.TvalueFvsOU));%,[-2,3]);
+fh = imagesc(squeeze(D.R.TvalueFvsOU),[-2,1.5]);
 axis equal; colorbar; axis off;
 title('T contrast FvsOU');
 if saving
@@ -405,7 +442,7 @@ end
 
 D.R.TvalueVvsFBAOU = (D.R.MeanV - D.R.MeanFBAOU) ./ sqrt(D.R.StdV.^2 / D.R.NumC + D.R.StdFBAOU.^2 / (D.R.NumC * 5));
 figure;
-fh = imagesc(squeeze(D.R.TvalueVvsFBAOU),[-1,1]);
+fh = imagesc(squeeze(D.R.TvalueVvsFBAOU));%,[-1,1]);
 axis equal; colorbar; axis off;
 title('T contrast VvsFBAOU');
 if saving
@@ -419,7 +456,7 @@ end
 
 D.R.TvalueVvsOU = (D.R.MeanV - D.R.MeanOU) ./ sqrt(D.R.StdV.^2 / D.R.NumC + D.R.StdOU.^2 / (D.R.NumC * 2));
 figure;
-fh = imagesc(squeeze(D.R.TvalueVvsOU),[-3,1]);
+fh = imagesc(squeeze(D.R.TvalueVvsOU));%,[-3,1]);
 axis equal; colorbar; axis off;
 title('T contrast VvsOU');
 if saving
@@ -636,23 +673,89 @@ end
 
 %%
 
-% *** Does not yet respect 'saving' boolean.
-% % Calculate and plot each category vs the maximum of all other categories
-% category_list = 1:8;
-% category_string = 'FBAVOUPS';
-% figure(27);
-% 
-% for category_i = 1:8 
-%     D.R.MeanF_tmp = squeeze(mean(R.snapshot(:,category_i,:,:),1));
-%     D.R.MeanBAVOUPS_tmp = squeeze(max(mean(R.snapshot(:,category_list (category_list ~= category_i),:,:),1), [], 2)); % all others
-%     D.R.AmpMeanDiff_tmp = D.R.MeanF_tmp - D.R.MeanBAVOUPS_tmp;
-%     subplot(2,4,category_i)
-%     
-%     f2h = imagesc(squeeze(D.R.AmpMeanDiff_tmp),[-0.0015,0.0015]);
-%     title(strcat('category = ', category_string(category_i)))
-%     axis equal; colorbar;
-%     axis off;
-% end
+saving = false;
+
+% Calculate and plot each category vs the maximum of all other categories
+category_list = 1:8;
+category_string = 'FBAVOUPS';
+figure(100);
+
+for category_i = 1:8 
+    D.R.MeanF_tmp = squeeze(mean(R.snapshot(:,category_i,:,:),1));
+    D.R.MeanBAVOUPS_tmp = squeeze(max(mean(R.snapshot(:,category_list (category_list ~= category_i),:,:),1), [], 2)); % all others
+    D.R.AmpMeanDiff_tmp = D.R.MeanF_tmp - D.R.MeanBAVOUPS_tmp;
+    subplot(2,4,category_i)
+    
+    f2h = imagesc(squeeze(D.R.AmpMeanDiff_tmp),[-0.020,0.006]); % through-window
+    %f2h = imagesc(squeeze(D.R.AmpMeanDiff_tmp),[-0.0015,0.0015]); %through-skull
+    title(strcat('category = ', category_string(category_i)))
+    axis equal; colorbar;
+    axis off;
+end
+
+%If you want to save the figure as pdf without weird-Matlab-cropping:
+if saving
+    set(gcf,'Units','inches');
+    screenposition = get(gcf,'Position');
+    set(gcf,...
+        'PaperPosition',[0 0 screenposition(3:4)],...
+        'PaperSize',[screenposition(3:4)]);
+    print -dpdf -painters AllVsMax(All)
+end
+
+figure(101);
+
+for category_i = 1:8 
+    D.R.MeanF_tmp = imgaussfilt(squeeze(mean(R.snapshot(:,category_i,:,:),1)),2);
+    D.R.MeanBAVOUPS_tmp = imgaussfilt(squeeze(max(mean(R.snapshot(:,category_list(category_list ~= category_i),:,:),1), [], 2)),2); % all others
+    D.R.AmpMeanDiff_tmp = D.R.MeanF_tmp - D.R.MeanBAVOUPS_tmp;
+    subplot(2,4,category_i)
+    
+    %f2h = imagesc(squeeze(D.R.AmpMeanDiff_tmp),[-0.008,0.008]); % through-window
+    f2h = imagesc(squeeze(D.R.AmpMeanDiff_tmp),[-0.0015,0.0015]); %through-skull
+    title(strcat('(blurred) category = ', category_string(category_i)))
+    axis equal; colorbar;
+    axis off;
+end
+
+%If you want to save the figure as pdf without weird-Matlab-cropping:
+if saving
+    set(gcf,'Units','inches');
+    screenposition = get(gcf,'Position');
+    set(gcf,...
+        'PaperPosition',[0 0 screenposition(3:4)],...
+        'PaperSize',[screenposition(3:4)]);
+    print -dpdf -painters AllVsMax(All)__Blurred
+end
+
+figure(102);
+
+for category_i = 1 
+    D.R.MeanF_tmp = imgaussfilt(squeeze(mean(R.snapshot(:,category_i,:,:),1)),2);
+    D.R.MeanBAVOUPS_tmp = imgaussfilt(squeeze(max(mean(R.snapshot(:,category_list (category_list ~= category_i),:,:),1), [], 2)),2); % all others
+    D.R.AmpMeanDiff_tmp = D.R.MeanF_tmp - D.R.MeanBAVOUPS_tmp;
+    
+    %f2h = imagesc(squeeze(D.R.AmpMeanDiff_tmp),[-0.008,0.008]); % through-window
+    f2h = imagesc(squeeze(D.R.AmpMeanDiff_tmp),[-0.0015,0.0015]); %through-skull
+    title('FacesVsMax(All)__Blurred')
+    axis equal; colorbar;
+    axis off;
+end
+
+%If you want to save the figure as pdf without weird-Matlab-cropping:
+if saving
+    set(gcf,'Units','inches');
+    screenposition = get(gcf,'Position');
+    set(gcf,...
+        'PaperPosition',[0 0 screenposition(3:4)],...
+        'PaperSize',[screenposition(3:4)]);
+    print -dpdf -painters FacesVsMax(All)__Blurred
+end
+% figure(103);
+% fused_average_and_FacesVsAll = imfuse(R.windowavg*0.000002,squeeze(D.R.AmpMeanDiff_tmp)*800,'falsecolor','Scaling','none','ColorChannels',[1 2 0]);
+% f1h1 = imagesc(fused_average_and_FacesVsAll); 
+% axis equal; axis off;
+% title('Window average fused with FacesVsMax(All)');
 % 
 % %If you want to save the figure as pdf without weird-Matlab-cropping:
 % set(gcf,'Units','inches');
@@ -660,4 +763,72 @@ end
 % set(gcf,...
 %     'PaperPosition',[0 0 screenposition(3:4)],...
 %     'PaperSize',[screenposition(3:4)]);
-% print -dpdf -painters epsFig
+% print -dpdf -painters FacePatchesOnAnatomical_Blended
+
+
+figure(103);
+% IM = R.windowavg*0.000002;
+% red_IM = cast(cat(3, IM, zeros(size(IM)), zeros(size(IM))), class(IM));
+% green_IM = cast(cat(3, zeros(size(IM)), IM, zeros(size(IM))), class(IM));
+% blue_IM = cast(cat(3, zeros(size(IM)), zeros(size(IM)), IM), class(IM));
+% bgim = uint8(IM * 256);
+bgim = gray2rgb(R.windowavg*0.000002);
+fgim = zeros(size(bgim));
+fgim(:,:,3) = squeeze(D.R.AmpMeanDiff_tmp)*150;
+% fused_average_and_FacesVsAll = imfuse(R.windowavg*0.000002,squeeze(D.R.AmpMeanDiff_tmp)*800,'falsecolor','Scaling','none','ColorChannels',[1 2 0]);
+% blended = imblend(squeeze(D.R.AmpMeanDiff_tmp)*800, bgim, 0.5, 'normal');
+blended = imblend(fgim, bgim, 0.6, 'normal');
+%f1h1 = imagesc(fused_average_and_FacesVsAll); 
+f1h1 = imshow(blended);
+axis equal; axis off;
+title('Window average blended with FacesVsMax(All)');
+
+%If you want to save the figure as pdf without weird-Matlab-cropping:
+if saving
+    set(gcf,'Units','inches');
+    screenposition = get(gcf,'Position');
+    set(gcf,...
+        'PaperPosition',[0 0 screenposition(3:4)],...
+        'PaperSize',[screenposition(3:4)]);
+    print -dpdf -painters FacePatchesOnAnatomical_Blended
+end
+
+
+
+figure(104);
+bgim = gray2rgb(double(R.windowavg/max(R.windowavg(:))));
+% bgim = gray2rgb(R.windowavg*0.000002);
+fgim = zeros(size(bgim));
+AmpMeanThresh = max(D.R.AmpMeanDiff(:)) - 0.65*(max(D.R.AmpMeanDiff(:)) - min(D.R.AmpMeanDiff(:)));
+% AmpMeanDifftmp = D.R.AmpMeanDiff(D.R.AmpMeanDiff >= AmpMeanThresh);
+%AmpMeanObjThresh = max(D.R.AmpMeanDiffObjs(:)) - 0.40*(max(D.R.AmpMeanDiffObjs(:)) - min(D.R.AmpMeanDiffObjs(:)));
+fgim(:,:,2) = D.R.AmpMeanDiff >= AmpMeanThresh;
+% fgim(:,:,2) = D.R.AmpMeanDiffObjs >= AmpMeanObjThresh;
+DotAvgThresh = max(average_map(:)) - 0.55*(max(average_map(:)) - min(average_map(:)));
+fgim(:,:,3) = average_map >= DotAvgThresh;
+% fgim(:,:,3) = D.R.AmpMeanDiff/max(D.R.AmpMeanDiff(:));
+% fgim(:,:,3) = squeeze(D.R.AmpMeanDiff)*800;
+% fused_average_and_FacesVsAll = imfuse(R.windowavg*0.000002,squeeze(D.R.AmpMeanDiff_tmp)*800,'falsecolor','Scaling','none','ColorChannels',[1 2 0]);
+% blended = imblend(squeeze(D.R.AmpMeanDiff_tmp)*800, bgim, 0.5, 'normal');
+blended = imblend(0.6*fgim, 1.5*bgim, 0.6, 'normal');
+%f1h1 = imagesc(fused_average_and_FacesVsAll); 
+f1h1 = imshow(blended);
+axis equal; axis off;
+title('blended FacesVsMaxAll (b) and DotsMovVsNotResp (g)');
+
+f2h = imagesc(squeeze(D.R.AmpMeanDiff), [-0.0,0.015]);
+axis equal; colorbar; axis off;
+title('response difference F against max of all others');
+% if saving
+%     datestrf = [datestr(now,'yyyymmdd') 'd' datestr(now,'HHMMSS') 't'];
+%     imwrite((D.R.AmpMeanDiff / max(D.R.AmpMeanDiff(:))),...
+%         [save_path filesep datestrf '_' monkey '_AmpMeanDiff_' cycle_num 'reps.png'])
+%     saveas(f2h,[save_path filesep datestrf '_' monkey '_AmpMeanDiff_' cycle_num 'reps_FigSaveAs.png'])
+% end
+
+figure;
+f2h = imagesc(squeeze(D.R.AmpMeanDiffObjs), [-0.01,0.015]);
+axis equal; colorbar; axis off;
+title('response difference F against max of objects only');
+
+
