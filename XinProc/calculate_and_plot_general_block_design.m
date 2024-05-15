@@ -3,14 +3,14 @@ fps = 5;
 saving = false;
 
 time_delay_hemo = 4;
-% %  
-% n_trials = 20;
-% time_stim_start = 5;
-% time_stim_end = 14.8;
+%  
+n_trials = 20;
+time_stim_start = 5;
+time_stim_end = 14.8;
 
-n_trials = 22;
-time_stim_start = 4;
-time_stim_end = 14;
+% n_trials = 22;
+% time_stim_start = 4;
+% time_stim_end = 14;
 
 test_additional_hemo_delays = false;
 
@@ -20,8 +20,13 @@ for i_extra_delay = 0 %1:15 % Only loops through the 15 if test_additional_hemo_
 
     result_map_files = cell(length(filenames),1);
     for i_file = 1:length(filenames)
-        disp(filenames{i_file})
-        load(strcat(folder,filenames{i_file}))
+        if class(filenames) == 'char'
+            fname = filenames
+        else
+            fmame = filenames{i_file}
+        end
+        %disp(filenames{i_file})
+        load(strcat(folder,fname))
 
         P.ProcDataMat = squeeze(P.ProcDataMat);
 
@@ -60,7 +65,7 @@ for i_extra_delay = 0 %1:15 % Only loops through the 15 if test_additional_hemo_
         imagesc(baseline_minus_response);
         %imagesc(baseline_minus_response,[0.1,0.75]); % through-window
         %imagesc(baseline_minus_response,[0.0,0.1]); % through-skull
-        title(strcat(filenames{i_file}, ' - ', num2str(n_trials), ' cycles'))
+        title(strcat(fname, ' - ', num2str(n_trials), ' cycles'))
         axis equal; colorbar;
         axis off;
 
@@ -72,14 +77,15 @@ for i_extra_delay = 0 %1:15 % Only loops through the 15 if test_additional_hemo_
 
     figure;
     %fm = imagesc(average_map,[0.0,0.6]); % through-window
-    fm = imagesc(average_map,[0.0,1.4]); % through-window Coconut MT
+    %fm = imagesc(average_map,[0.0,1.4]); % through-window Coconut MT
     %fm = imagesc(average_map,[0.0,2.6]); % through-window Scrooge MT
-    %fm = imagesc(average_map,[0.0,0.3]); % through-skull
+    fm = imagesc(average_map,[0.0,0.05]); % through-skull
     axis equal; colorbar; axis off;
     %title(strcat('Merged map:', num2str(n_trials * length(filenames)), ' cycles'))
-    title('resp amp diff, dots moving vs static averaged over all reps');
+    %title('resp amp diff, white noise vs silence averaged over all reps');
+     title('resp amp diff, dots moving vs static averaged over all reps');
     if saving
-        monkey = 'Scrooge';
+        monkey = 'Cadbury';
         cycle_num = n_trials * length(filenames);
         datestrf = [datestr(now,'yyyymmdd') 'd' datestr(now,'HHMMSS') 't'];
         saveas(fm,[save_path filesep datestrf '_' monkey '_AmpMeanDiffDots_' num2str(cycle_num) 'reps_FigSaveAs.png'])
@@ -108,7 +114,7 @@ blended = imblend(fgim, bgim, 0.8, 'normal');
 f1h1 = imshow(blended);
 axis equal; axis off;
 if saving
-    monkey = 'Coconut';
+    monkey = 'Cadbury';
     cycle_num = n_trials * length(filenames);
     datestrf = [datestr(now,'yyyymmdd') 'd' datestr(now,'HHMMSS') 't'];
     saveas(fm,[save_path filesep datestrf '_' monkey '_AmpMeanDiffDots_' num2str(cycle_num) 'reps_FigSaveAs.png'])
@@ -120,15 +126,23 @@ end
 % Generate blended functional+anatomical map
 % This works for Auditory through-skull
 average_map_thresholded = average_map;
-average_map_thresholded(average_map<0.05) = 0;
+average_map_thresholded(average_map<0.020) = 0;
 figure
 bgim = gray2rgb(baseline*0.03);
 fgim = zeros(size(bgim));
 fgim(:,:,1) = squeeze(average_map_thresholded)*5;
 blended = imblend(fgim, bgim, 0.8, 'normal');
-f1h1 = imshow(blended);
+f1hwn = imshow(blended);
 axis equal; axis off;
-
+if saving
+    monkey = 'Cadbury';
+    cycle_num = n_trials * length(filenames);
+    datestrf = [datestr(now,'yyyymmdd') 'd' datestr(now,'HHMMSS') 't'];
+    %saveas(fm,[save_path filesep datestrf '_' monkey '_AmpMeanDiffWN_' num2str(cycle_num) 'reps_FigSaveAs.png'])
+    %saveas(f1hwn,[save_path filesep datestrf '_' monkey '_AmpMeanDiffWN_' num2str(cycle_num) 'reps_FigSaveAs.svg'])
+    saveas(f1hwn,[save_path filesep datestrf '_' monkey '_OverlayWN_' num2str(cycle_num) 'reps_FigSaveAs.png'])
+    saveas(f1hwn,[save_path filesep datestrf '_' monkey '_OverlayWN_' num2str(cycle_num) 'reps_FigSaveAs.svg'])
+end
 
 average_map_thresholded = average_map;
 average_map_thresholded(average_map<0.12) = 0;
