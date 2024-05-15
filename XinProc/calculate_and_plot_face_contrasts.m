@@ -2,11 +2,13 @@
 
 saving = true;
 
-% monkey = 'Cadbury';
+monkey = 'Cadbury';
 % load('D:\XINTRINSIC\Cadbury_20220405d\20220406d004446t_Recording_JoinedCollection_300x480@5fps_24repeats.mat');
 % save_path = 'D:\XINTRINSIC\Cadbury_20220405d';
 % load('D:\XINTRINSIC\Cadbury_20220405d_LessBin\20230126d195611t_Recording_JoinedCollection_300x480@10fps_24repeats.mat');
 % save_path = 'D:\XINTRINSIC\Cadbury_20220405d_LessBin';
+load('D:\XINTRINSIC\Cadbury_20240325d\images_pxBin1_frBin5_gaussFalse\20240325d194730t_Recording_JoinedCollection_300x480@5fps');
+save_path = 'D:\XINTRINSIC\Cadbury_20240325d\results';
 
 % monkey = 'Crumpet';
 % load('D:\XINTRINSIC\Crumpet_20230129d\20230129d231636t_Recording_JoinedCollection_300x480@5fps.mat')
@@ -60,9 +62,9 @@ saving = true;
 % load('D:\XINTRINSIC\Curly_20231016d\20231016d215420t_Recording_JoinedCollection_300x480@5fps')
 % save_path = 'D:\XINTRINSIC\Curly_20231016d\results';
 
-monkey = 'Coconut';
-load('D:\XINTRINSIC\Coconut_20240112d_proc\images_pxBin1_frBin5_gaussFalse\20240112d191105t_Recording_JoinedCollection_300x480@5fps.mat')
-save_path = 'D:\XINTRINSIC\Coconut_20240112d\results';
+% monkey = 'Coconut';
+% load('D:\XINTRINSIC\Coconut_20240112d_proc\images_pxBin1_frBin5_gaussFalse\20240112d191105t_Recording_JoinedCollection_300x480@5fps.mat')
+% save_path = 'D:\XINTRINSIC\Coconut_20240112d\results';
 % load('D:\XINTRINSIC\Coconut_20240205d_org\images_pxBin1_frBin5_gaussFalse\20240205d172049t_Recording_JoinedCollection_300x480@5fps.mat')
 % save_path = 'D:\XINTRINSIC\Coconut_20240205d_org\results';
 % load('D:\XINTRINSIC\Coconut_20240207d_org\images_pxBin1_frBin5_gaussFalse\20240207d153353t_Recording_JoinedCollection_300x480@5fps.mat')
@@ -686,7 +688,7 @@ for category_i = 1:8
     D.R.AmpMeanDiff_tmp = D.R.MeanF_tmp - D.R.MeanBAVOUPS_tmp;
     subplot(2,4,category_i)
     
-    f2h = imagesc(squeeze(D.R.AmpMeanDiff_tmp),[-0.020,0.006]); % through-window
+    f2h = imagesc(squeeze(D.R.AmpMeanDiff_tmp),[-0.010,0.004]); % through-window
     %f2h = imagesc(squeeze(D.R.AmpMeanDiff_tmp),[-0.0015,0.0015]); %through-skull
     title(strcat('category = ', category_string(category_i)))
     axis equal; colorbar;
@@ -751,6 +753,7 @@ if saving
         'PaperSize',[screenposition(3:4)]);
     print -dpdf -painters FacesVsMax(All)__Blurred
 end
+
 % figure(103);
 % fused_average_and_FacesVsAll = imfuse(R.windowavg*0.000002,squeeze(D.R.AmpMeanDiff_tmp)*800,'falsecolor','Scaling','none','ColorChannels',[1 2 0]);
 % f1h1 = imagesc(fused_average_and_FacesVsAll); 
@@ -784,14 +787,14 @@ axis equal; axis off;
 title('Window average blended with FacesVsMax(All)');
 
 %If you want to save the figure as pdf without weird-Matlab-cropping:
-if saving
-    set(gcf,'Units','inches');
-    screenposition = get(gcf,'Position');
-    set(gcf,...
-        'PaperPosition',[0 0 screenposition(3:4)],...
-        'PaperSize',[screenposition(3:4)]);
-    print -dpdf -painters FacePatchesOnAnatomical_Blended
-end
+% if saving
+%     set(gcf,'Units','inches');
+%     screenposition = get(gcf,'Position');
+%     set(gcf,...
+%         'PaperPosition',[0 0 screenposition(3:4)],...
+%         'PaperSize',[screenposition(3:4)]);
+%     print -dpdf -painters FacePatchesOnAnatomical_Blended
+% end
 
 
 
