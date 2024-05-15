@@ -85,8 +85,8 @@ stm.Vis.SesTrlOrderMat =        [];
         stm.Vis.SesTrlOrderMat= [stm.Vis.SesTrlOrderMat; randperm(stm.Vis.TrlNumTotal)];
     end    
    
-        stm.Vis.SesTrlOrderVec= reshape(stm.Vis.SesTrlOrderMat',1,[]);
-        stm.Vis.SesTrlOrderSoundVec = stm.Vis.TrlIndexSoundNum(stm.Vis.SesTrlOrderVec);             
+stm.Vis.SesTrlOrderVec= reshape(stm.Vis.SesTrlOrderMat',1,[]);
+stm.Vis.SesTrlOrderSoundVec = stm.Vis.TrlIndexSoundNum(stm.Vis.SesTrlOrderVec);             
 
 stm.Vis.CtrlTrlNumTotal =       stm.Vis.SesCycleNumTotal*stm.Vis.TrlNumTotal;  % in second
 stm.Vis.CtrlTrlNumCurrent =     0;
