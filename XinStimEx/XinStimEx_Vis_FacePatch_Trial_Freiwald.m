@@ -212,27 +212,43 @@ end
 
 %% NI-DAQ
 
-sys.NIDAQ.D.InTimebaseRate =    stm.SR;
-sys.NIDAQ.D.TrialSmplHigh =     2;
-sys.NIDAQ.D.TrialSmplLow =      sys.NIDAQ.D.InTimebaseRate * stm.Vis.TrlDurTotal - ...
-                                sys.NIDAQ.D.TrialSmplHigh;
-import dabs.ni.daqmx.*
-sys.NIDAQ.TaskCO = Task('Recording Session Cycle Switcher');
-sys.NIDAQ.TaskCO.createCOPulseChanTicks(...
-    'Intrinsic_PCIe6323', 1, 'Cycle Counter', '100kHzTimebase', ...
-    sys.NIDAQ.D.TrialSmplLow, sys.NIDAQ.D.TrialSmplHigh,...
-    0, 'DAQmx_Val_Low');
-sys.NIDAQ.TaskCO.cfgImplicitTiming(...
-    'DAQmx_Val_FiniteSamps',	stm.Vis.CtrlTrlNumTotal+1);
-sys.NIDAQ.TaskCO.cfgDigEdgeStartTrig(...
-    'RTSI6',            'DAQmx_Val_Rising');
-sys.NIDAQ.TaskCO.registerSignalEvent(...
-    @XinStimEx_Vis_FacePatch_Trial_Callback, 'DAQmx_Val_CounterOutputEvent');
-sys.NIDAQ.TaskCO.start()
-stm.Vis.Running = 1;     
-opts = struct('WindowStyle',  'non-modal',...
-    'Interpreter',  'tex');
-sys.MsgBox = msgbox('\fontsize{20} Click to terminate the session after current visual cycle','', opts);
+% stm.TimerOption = 'simulated';
+stm.TimerOption = 'NI-DAQ';
+
+switch stm.TimerOption
+    case 'NI-DAQ'
+        sys.NIDAQ.D.InTimebaseRate =    stm.SR;
+        sys.NIDAQ.D.TrialSmplHigh =     2;
+        sys.NIDAQ.D.TrialSmplLow =      sys.NIDAQ.D.InTimebaseRate * stm.Vis.TrlDurTotal - ...
+            sys.NIDAQ.D.TrialSmplHigh;
+        import dabs.ni.daqmx.*
+        sys.NIDAQ.TaskCO = Task('Recording Session Cycle Switcher');
+        sys.NIDAQ.TaskCO.createCOPulseChanTicks(...
+            'Intrinsic_PCIe6323', 1, 'Cycle Counter', '100kHzTimebase', ...
+            sys.NIDAQ.D.TrialSmplLow, sys.NIDAQ.D.TrialSmplHigh,...
+            0, 'DAQmx_Val_Low');
+        sys.NIDAQ.TaskCO.cfgImplicitTiming(...
+            'DAQmx_Val_FiniteSamps',	stm.Vis.CtrlTrlNumTotal+1);
+        sys.NIDAQ.TaskCO.cfgDigEdgeStartTrig(...
+            'RTSI6',            'DAQmx_Val_Rising');
+        sys.NIDAQ.TaskCO.registerSignalEvent(...
+            @XinStimEx_Vis_FacePatch_Trial_Callback, 'DAQmx_Val_CounterOutputEvent');
+        sys.NIDAQ.TaskCO.start()
+        stm.Vis.Running = 1;
+        opts = struct('WindowStyle',  'non-modal',...
+            'Interpreter',  'tex');
+        sys.MsgBox = msgbox('\fontsize{20} Click to terminate the session after current visual cycle','', opts);
+    case 'simulated'
+        sys.TimerH =                timer;
+        sys.TimerH.TimerFcn =       @XinStimEx_Vis_MT_Localizer_Callback;
+        sys.TimerH.Period =         stm.SesCycleTime;
+        sys.TimerH.TasksToExecute = sys.SesCycleNumTotal+1;
+        sys.TimerH.ExecutionMode =  'fixedRate';
+        sys.MsgBox =                msgbox('Click to terminate the session after current cycle');
+        stm.Running =               1;
+        sys.TimerH.start;   
+    otherwise
+end
 
 %% Play 
 while stm.Vis.Running
