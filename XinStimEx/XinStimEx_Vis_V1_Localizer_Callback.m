@@ -1,28 +1,35 @@
-function Grating_Intrinsic_Callback(~,~)
-global stm sys
-%% Start a Cycle
+function XinStimEx_Vis_V1_Localizer_Callback(~,~)
 
+global stm sys
+
+%% Start a Cycle
 % This function is called everytime 
 %   stm.TimerOption = 'simulated':  an event happens on the software timer
 %   stm.TimerOption = 'NI-DAQ':     a signal event happens on the hardware CO
-if toc(stm.SesCycleTimeInitial) > 0.1    
+
+if toc(stm.Vis.CtrlTrlDurCurrentTimer) > 0.1    
     % This "if" is necessary for 'NI-DAQ' to require
     % at least 0.1s between real rising-edge triggering events to avoid 
     % pseudo-triggering by the falling-edge events
-    sys.SesCycleNumCurrent =   sys.SesCycleNumCurrent + 1;
-    stm.SesCycleTimeInitial =  tic;
+    stm.Vis.CtrlTrlNumCurrent = stm.Vis.CtrlTrlNumCurrent + 1;
+    stm.Vis.CtrlTrlDurCurrentTimer = tic;
     tt = datestr(now, 'HH:MM:SS.FFF');
-    disp([sprintf('cycle: #%d ', sys.SesCycleNumCurrent), tt]); 
+    try
+        disp([sprintf('trial: #%d type ''%s'' ', stm.Vis.CtrlTrlNumCurrent, ...
+            stm.Vis.TrlNames{stm.Vis.SesTrlOrderVec(stm.Vis.CtrlTrlNumCurrent)}), ...
+            tt]);
+    end
     drawnow;
     if isfield(sys, 'MsgBox')
         if ~ishandle(sys.MsgBox)
-            sys.SesCycleNumCurrent = sys.SesCycleNumTotal +1;
+            stm.Vis.CtrlTrlNumCurrent = stm.Vis.CtrlTrlNumTotal + 1;
         end
     end
 end
-%% Stop the session
-if (sys.SesCycleNumCurrent == sys.SesCycleNumTotal + 1) && (stm.Vis.Running == 1)
-    stm.Running = 0;    
+
+%% Stop session
+if (stm.Vis.CtrlTrlNumCurrent == stm.Vis.CtrlTrlNumTotal + 1) && (stm.Vis.Running == 1)
+    stm.Vis.Running = 0;    
     try
         sys.NIDAQ.TaskCO.abort();
         sys.NIDAQ.TaskCO.delete;
@@ -35,4 +42,3 @@ if (sys.SesCycleNumCurrent == sys.SesCycleNumTotal + 1) && (stm.Vis.Running == 1
         end
     end    
 end
-    
